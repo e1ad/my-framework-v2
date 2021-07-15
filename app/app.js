@@ -1,10 +1,11 @@
-import { CreateForm, RequiredValidator } from './createForm/createForm.js';
-
+import {CreateForm, minNumberValidator, RequiredValidator} from './createForm/createForm.js';
+import {Menu} from "./menu/menu.js";
 
 
 document.addEventListener('DOMContentLoaded', (event) => {
     new CreateForm({
         target: '#app-from',
+        initOpen: false,
         fields: [
             {
                 name: 'first_name',
@@ -24,7 +25,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 attributes: {
                     min: 0,
                     step: 1
-                }
+                },
+                validators: [minNumberValidator(18)]
             },
             {
                 name: 'county',
@@ -64,4 +66,27 @@ document.addEventListener('DOMContentLoaded', (event) => {
             }
         }
     });
+
+
+    new Menu('#menu', {
+        trigger: 'Hello world',
+        onToggle: () => {
+            console.log('on open');
+        },
+        onSelect: (item) => {
+            console.log(item);
+        },
+        items: [
+            {
+                name: 'item 1',
+            },
+            {
+                name: 'item 2',
+            },
+            {
+                name: 'item 3',
+            }
+        ]
+    });
+
 });

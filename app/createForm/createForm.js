@@ -6,12 +6,14 @@ import {
     find,
     isNil,
     reduce,
-    style
+    style,
+    styleElement,
+    isNumber
 } from '../commons.js';
 import {ERROR_MESSAGE, ERROR_CODE} from './form.const.js';
 
 
-const fieldContainer = style('div',`
+const fieldContainer = style('div', `
     :host {
         display: flex;
         flex-direction: column;
@@ -35,7 +37,7 @@ export class CreateForm {
     static DEFAULT_SUBMIT_TEXT = 'Save';
     static ERROR_CONTAINER_CLASS = 'error-container';
 
-    values = {};
+    _values = {};
 
     constructor(config) {
         this.config = config;
@@ -48,14 +50,18 @@ export class CreateForm {
 
     createFields() {
         forEach(this.config.fields, field => {
-            this.form.append(fieldContainer({field: field.name}, [
-                {
-                    tag: 'label',
-                    children: field.label
-                },
-                this.getInputByType(field),
-                errorContainer({class: CreateForm.ERROR_CONTAINER_CLASS})
-            ]));
+            this.form.append(fieldContainer({
+                    attr: {field: field.name},
+                    children: [
+                        {
+                            tag: 'label',
+                            children: field.label
+                        },
+                        this.getInputByType(field),
+                        errorContainer({attr: {class: CreateForm.ERROR_CONTAINER_CLASS}})
+                    ]
+                })
+            );
         });
     }
 
@@ -81,19 +87,20 @@ export class CreateForm {
     }
 
     getCheckboxInput(field) {
-        this.values[field.name] = {};
+        this._values[field.name] = {};
 
         const checkboxContainer = reduce(field.items, (acc, item) => {
             const id = `${field.name}-${item.name}`;
 
-            acc.push(createElement('input', {
-                type: 'checkbox',
-                value: item.value,
-                name: field.name,
-                id: id
-            }));
-
-            acc.push(createElement('label', {for: id}, item.name));
+            acc.push(
+                createElement('input', {
+                    type: 'checkbox',
+                    value: item.value,
+                    name: field.name,
+                    id: id
+                }),
+                createElement('label', {for: id}, item.name)
+            );
 
             return acc;
         }, []);
@@ -120,7 +127,7 @@ export class CreateForm {
                     name: 'click',
                     callback: (event) => {
                         event.preventDefault();
-                        this.config.submit.onClick(this.values);
+                        this.config.submit.onClick(this._values);
                     }
                 }
             })
@@ -133,7 +140,7 @@ export class CreateForm {
 
     getFieldErrors(field) {
         return reduce(field.validators, (acc, validator) => {
-            const error = validator(field, this.values) || {};
+            const error = validator(field, this._values) || {};
             return {...acc, ...error};
         }, {});
     }
@@ -145,10 +152,13 @@ export class CreateForm {
     handleError(field, input) {
         const errorElement = this.getFieldElement(field).querySelector(`.${CreateForm.ERROR_CONTAINER_CLASS}`);
         const error = this.getFieldErrors(field);
-        const isRequired = this.getErrorMessage(error, ERROR_CODE.REQUIRED);
 
-        errorElement.innerText = isRequired;
-        input.style.border = `solid 1px ${isRequired ? 'red' : 'black'}`;
+        const isRequired = this.getErrorMessage(error, ERROR_CODE.REQUIRED);
+        const isMin = this.getErrorMessage(error, ERROR_CODE.MIN_NUMBER);
+
+        errorElement.innerText = isRequired + isMin;
+
+        styleElement(input, {border: `solid 1px ${isRequired || isMin ? 'red' : 'black'}`})
     }
 
     getValueByType(field, input) {
@@ -156,7 +166,7 @@ export class CreateForm {
             case 'number':
                 return input.valueAsNumber;
             case 'checkbox':
-                return {...this.values[field.name], [input.value]: input.checked};
+                return {...this._values[field.name], [input.value]: input.checked};
             default:
                 return input.value;
         }
@@ -166,14 +176,22 @@ export class CreateForm {
         const input = event.target;
         const name = input.attributes.name.value;
         const field = find(this.config.fields, field => field.name === name);
-        this.values[name] = this.getValueByType(field, input);
+        this._values[name] = this.getValueByType(field, input);
         this.handleError(field, input);
     }
 
-}
+    setValues(values) {
+        Object.assign(this._values, values);
+    }
 
+}
 
 export const RequiredValidator = (field, values) => {
     return isNil(values[field.name]) ? {[ERROR_CODE.REQUIRED]: ERROR_MESSAGE[ERROR_CODE.REQUIRED]} : null;
 };
 
+export const minNumberValidator = (min) => {
+    return (field, values) => {
+        return isNumber(values[field.name]) && values[field.name] > min ? null : {[ERROR_CODE.MIN_NUMBER]: ERROR_MESSAGE[ERROR_CODE.MIN_NUMBER]}
+    };
+}

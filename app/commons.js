@@ -18,6 +18,10 @@ export const creatDomElements = (item) => {
 
     const element = isElement(item) ? item : createElement(item.tag, item.attr, children);
 
+    if (item.style) {
+        styleElement(item, item.style);
+    }
+
     if (item.event) {
         element.addEventListener(item.event.name, item.event.callback, false);
     }
@@ -42,13 +46,24 @@ export const style = (tag, style) => {
 
     head.append(createElement('style', null, styleText));
 
-    return (attr = {}, children) => {
+    return ({children, attr = {}, event}) => {
         return creatDomElements({
             tag,
             attr: {...attr, class: `${className} ${attr.class || ''}`},
+            event,
             children
         });
     };
+};
+
+export const styleElement = (element, style) => {
+    for (let key in style) {
+        if (style.hasOwnProperty(key)) {
+            element.style[key] = style[key];
+        }
+    }
+
+    return element;
 };
 
 export const castArray = (value) => Array.isArray(value) ? value : [value];
@@ -80,6 +95,12 @@ export const forEach = (array, callback) => {
 export const find = (array, callback) => {
     if (Array.isArray(array) && array.length) {
         return array.find(callback);
+    }
+};
+
+export const map = (array, callback) => {
+    if (Array.isArray(array) && array.length) {
+        return array.map(callback);
     }
 };
 
