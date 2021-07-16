@@ -1,10 +1,9 @@
-import {CreateForm, minNumberValidator, RequiredValidator} from './createForm/createForm.js';
-import {Menu} from "./menu/menu.js";
+import {CreateForm, validator} from './createForm/createForm.js';
+import {Menu} from './menu/menu.js';
 
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    new CreateForm({
-        target: '#app-from',
+    new CreateForm('#app-from',{
         initOpen: false,
         fields: [
             {
@@ -16,7 +15,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 name: 'last_name',
                 type: 'text',
                 label: 'Last Name',
-                validators: [RequiredValidator]
+                validators: [validator.required]
             },
             {
                 name: 'age',
@@ -26,7 +25,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                     min: 0,
                     step: 1
                 },
-                validators: [minNumberValidator(18)]
+                validators: [validator.minNumber(18)]
             },
             {
                 name: 'county',
@@ -70,8 +69,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     new Menu('#menu', {
         trigger: 'Hello world',
-        onToggle: () => {
-            console.log('on open');
+        closeOnSelect:true,
+        onToggle: (isOpen) => {
+            console.log(`is ${isOpen ? 'open' : 'close'}`);
         },
         onSelect: (item) => {
             console.log(item);

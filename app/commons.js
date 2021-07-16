@@ -114,7 +114,6 @@ export const reduce = (array, callback, initialValue) => {
 
 export const isNil = (value) => [undefined, null, ''].includes(value);
 
-
 export const clickOutside = (element, {whitelist, onClick}) => {
 
     const whitelistedElements = map(whitelist, (i) => isElement(i) ? i : document.querySelector(i));

@@ -6,31 +6,12 @@ import {
     find,
     isNil,
     reduce,
-    style,
     styleElement,
     isNumber
 } from '../commons.js';
 import {ERROR_MESSAGE, ERROR_CODE} from './form.const.js';
+import {ErrorContainer, FieldContainer} from './createForm.style.js';
 
-
-const fieldContainer = style('div', `
-    :host {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 2px;
-    }
-    
-    :host label {
-       font-size: 14px;
-    }
-`);
-
-const errorContainer = style('div', `
- :host {
-   height: 20px;
-   font-size: 12px;
- }
-`);
 
 export class CreateForm {
     static MAIN_CLASS = 'create-from-container';
@@ -39,9 +20,9 @@ export class CreateForm {
 
     _values = {};
 
-    constructor(config) {
+    constructor(target, config) {
         this.config = config;
-        this.form = document.querySelector(this.config.target);
+        this.form = document.querySelector(target);
         this.form.classList.add(CreateForm.MAIN_CLASS);
         createEventListener(this.form, 'change', this.onFormChange.bind(this));
         this.createFields();
@@ -50,7 +31,7 @@ export class CreateForm {
 
     createFields() {
         forEach(this.config.fields, field => {
-            this.form.append(fieldContainer({
+            this.form.append(FieldContainer({
                     attr: {field: field.name},
                     children: [
                         {
@@ -58,7 +39,7 @@ export class CreateForm {
                             children: field.label
                         },
                         this.getInputByType(field),
-                        errorContainer({attr: {class: CreateForm.ERROR_CONTAINER_CLASS}})
+                        ErrorContainer({attr: {class: CreateForm.ERROR_CONTAINER_CLASS}})
                     ]
                 })
             );
@@ -179,19 +160,15 @@ export class CreateForm {
         this._values[name] = this.getValueByType(field, input);
         this.handleError(field, input);
     }
+}
 
-    setValues(values) {
-        Object.assign(this._values, values);
+export const validator = {
+    required: (field, values) => {
+        return isNil(values[field.name]) ? {[ERROR_CODE.REQUIRED]: ERROR_MESSAGE[ERROR_CODE.REQUIRED]} : null;
+    },
+    minNumber: (min) => {
+        return (field, values) => {
+            return isNumber(values[field.name]) && values[field.name] > min ? null : {[ERROR_CODE.MIN_NUMBER]: ERROR_MESSAGE[ERROR_CODE.MIN_NUMBER]}
+        }
     }
-
-}
-
-export const RequiredValidator = (field, values) => {
-    return isNil(values[field.name]) ? {[ERROR_CODE.REQUIRED]: ERROR_MESSAGE[ERROR_CODE.REQUIRED]} : null;
 };
-
-export const minNumberValidator = (min) => {
-    return (field, values) => {
-        return isNumber(values[field.name]) && values[field.name] > min ? null : {[ERROR_CODE.MIN_NUMBER]: ERROR_MESSAGE[ERROR_CODE.MIN_NUMBER]}
-    };
-}

@@ -1,14 +1,20 @@
-import {clickOutside, map} from '../commons.js';
-import {menuItem, menuListContainer, triggerButton} from './menu.style.js';
+import {clickOutside, isElement, map, styleElement} from '../commons.js';
+import {MenuItem, MenuListContainer, TriggerButton} from './menu.style.js';
 
 export class Menu {
 
     constructor(target, config) {
-        this.target = document.querySelector(target);
+        this.target = isElement(target) ? target : document.querySelector(target);
         this.config = config;
 
-        this.triggerButton = triggerButton({
-            children: config.trigger,
+        this.createTriggerButton();
+
+        config.initOpen && this.onToggle();
+    }
+
+    createTriggerButton() {
+        this.triggerButton = TriggerButton({
+            children: this.config.trigger,
             event: {
                 name: 'click',
                 callback: this.onToggle.bind(this),
@@ -16,13 +22,11 @@ export class Menu {
         });
 
         this.target.append(this.triggerButton);
-
-        config.initOpen && this.createMenuList();
     }
 
     createMenuList() {
-        const ul = menuListContainer({
-            children: map(this.config.items, (item) => menuItem({
+        const ul = MenuListContainer({
+            children: map(this.config.items, (item) => MenuItem({
                 children: item.name,
                 event: {
                     name: 'click',
@@ -31,21 +35,30 @@ export class Menu {
             }))
         });
 
-        this.target.append(ul);
+        const {height, top, left} = this.triggerButton.getBoundingClientRect()
 
-        this.destroyClickOutside && this.destroyClickOutside();
+        this.target.append(styleElement(ul, {
+            left: `${left}px`,
+            top: `${height + top + 2}px`,
+        }));
 
-        this.destroyClickOutside = clickOutside(ul,{ whitelist: [this.triggerButton] ,onClick:this.onToggle.bind(this)});
+        this.destroyClickOutside = clickOutside(ul, {
+            whitelist: [this.triggerButton],
+            onClick: this.onToggle.bind(this)
+        });
     }
 
-    onToggle(event) {
-        const ul = [...this.target.children].find(child => child.nodeName === "UL");
+    onToggle() {
+        this.destroyClickOutside && this.destroyClickOutside();
+
+        const ul = this.target.querySelector('ul');
         ul ? ul.remove() : this.createMenuList();
 
-        this.config.onToggle && this.config.onToggle(event);
+        this.config.onToggle && this.config.onToggle(!ul);
     }
 
     onItemClick(item, event) {
+        this.config.closeOnSelect && this.onToggle();
         this.config.onSelect(item, event);
     }
 
