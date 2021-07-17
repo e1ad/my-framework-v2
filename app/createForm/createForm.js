@@ -8,12 +8,15 @@ import {
     reduce,
     styleElement,
     isNumber
-} from '../commons.js';
+} from '../../framework/commons.js';
 import {ERROR_MESSAGE, ERROR_CODE} from './form.const.js';
 import {ErrorContainer, FieldContainer} from './createForm.style.js';
+import {framework} from '../../framework/framework.js';
 
-
-export class CreateForm {
+export const CreateForm = framework.component({
+    name: 'CreateForm',
+    injected: []
+},class CreateForm {
     static MAIN_CLASS = 'create-from-container';
     static DEFAULT_SUBMIT_TEXT = 'Save';
     static ERROR_CONTAINER_CLASS = 'error-container';
@@ -30,7 +33,7 @@ export class CreateForm {
     }
 
     createFields() {
-        forEach(this.config.fields, field => {
+        forEach(this.config.fields, (field) => {
             this.form.append(FieldContainer({
                     attr: {field: field.name},
                     children: [
@@ -160,7 +163,8 @@ export class CreateForm {
         this._values[name] = this.getValueByType(field, input);
         this.handleError(field, input);
     }
-}
+})
+
 
 export const validator = {
     required: (field, values) => {

@@ -1,7 +1,12 @@
-import {clickOutside, isElement, map, styleElement} from '../commons.js';
+import {clickOutside, isElement, map, styleElement} from '../../framework/commons.js';
 import {MenuItem, MenuListContainer, TriggerButton} from './menu.style.js';
+import {framework} from '../../framework/framework.js';
 
-export class Menu {
+
+export const Menu = framework.component({
+    name: 'Menu',
+    injected: []
+}, class Menu {
 
     constructor(target, config) {
         this.target = isElement(target) ? target : document.querySelector(target);
@@ -61,5 +66,4 @@ export class Menu {
         this.config.closeOnSelect && this.onToggle();
         this.config.onSelect(item, event);
     }
-
-}
+})

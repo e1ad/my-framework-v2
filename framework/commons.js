@@ -102,6 +102,8 @@ export const map = (array, callback) => {
     if (Array.isArray(array) && array.length) {
         return array.map(callback);
     }
+
+    return [];
 };
 
 export const reduce = (array, callback, initialValue) => {

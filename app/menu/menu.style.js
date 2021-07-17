@@ -1,4 +1,4 @@
-import {style} from '../commons.js';
+import {style} from '../../framework/commons.js';
 
 export const MenuListContainer = style('ul', `
 :host{

@@ -1,9 +1,15 @@
 import {CreateForm, validator} from './createForm/createForm.js';
 import {Menu} from './menu/menu.js';
+import {framework} from '../framework/framework.js';
+import {TestAService} from './services/serviceA.js';
+import {TestBService} from './services/ServiceB.js';
 
+
+framework.start();
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    new CreateForm('#app-from',{
+
+    CreateForm('#app-from', {
         initOpen: false,
         fields: [
             {
@@ -67,26 +73,28 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 
 
-    new Menu('#menu', {
-        trigger: 'Hello world',
-        closeOnSelect:true,
-        onToggle: (isOpen) => {
-            console.log(`is ${isOpen ? 'open' : 'close'}`);
-        },
-        onSelect: (item) => {
-            console.log(item);
-        },
-        items: [
-            {
-                name: 'item 1',
+    Menu('#menu',
+        {
+            trigger: 'Hello world',
+            closeOnSelect: true,
+            onToggle: (isOpen) => {
+                console.log(`is ${isOpen ? 'open' : 'close'}`);
             },
-            {
-                name: 'item 2',
+            onSelect: (item) => {
+                console.log(item);
             },
-            {
-                name: 'item 3',
-            }
-        ]
-    });
+            items: [
+                {
+                    name: 'item 1',
+                },
+                {
+                    name: 'item 2',
+                },
+                {
+                    name: 'item 3',
+                }
+            ]
+        }
+    )
 
 });
