@@ -20,10 +20,7 @@ export const Menu = framework.component({
     createTriggerButton() {
         this.triggerButton = TriggerButton({
             children: this.props.trigger,
-            event: {
-                name: 'click',
-                callback: this.onToggle.bind(this),
-            }
+            onClick: this.onToggle.bind(this),
         });
 
         this.host.append(this.triggerButton);
@@ -33,10 +30,7 @@ export const Menu = framework.component({
         const ul = MenuListContainer({
             children: map(this.props.items, (item) => MenuItem({
                 children: item.name,
-                event: {
-                    name: 'click',
-                    callback: (event) => this.onItemClick(item, event)
-                }
+                onClick: (event) => this.onItemClick(item, event)
             }))
         });
 

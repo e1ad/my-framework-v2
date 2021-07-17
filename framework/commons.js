@@ -22,6 +22,10 @@ export const creatDomElements = (item) => {
         styleElement(item, item.style);
     }
 
+    if (isFunction(item.onClick)) {
+        item.event = {name: 'click', callback: item.onClick};
+    }
+
     if (item.event) {
         element.addEventListener(item.event.name, item.event.callback, false);
     }
@@ -46,11 +50,12 @@ export const style = (tag, style) => {
 
     head.append(createElement('style', null, styleText));
 
-    return ({children, attr = {}, event}) => {
+    return ({children, attr = {}, event, onClick}) => {
         return creatDomElements({
             tag,
             attr: {...attr, class: `${className} ${attr.class || ''}`},
             event,
+            onClick,
             children
         });
     };

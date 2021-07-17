@@ -19,7 +19,7 @@ export const CreateForm = framework.component({
     hostBinding: (host) => {
         host.classList.add('create-from-container');
     },
-},class CreateForm {
+}, class CreateForm {
     static DEFAULT_SUBMIT_TEXT = 'Save';
     static ERROR_CONTAINER_CLASS = 'error-container';
 
@@ -74,23 +74,24 @@ export const CreateForm = framework.component({
     getCheckboxInput(field) {
         this._values[field.name] = {};
 
-        const checkboxContainer = reduce(field.items, (acc, item) => {
-            const id = `${field.name}-${item.name}`;
+        return createElement('div',
+            {class: 'checkbox-container'},
+            reduce(field.items, (acc, item) => {
+                const id = `${field.name}-${item.name}`;
 
-            acc.push(
-                createElement('input', {
-                    type: 'checkbox',
-                    value: item.value,
-                    name: field.name,
-                    id: id
-                }),
-                createElement('label', {for: id}, item.name)
-            );
+                acc.push(
+                    createElement('input', {
+                        type: 'checkbox',
+                        value: item.value,
+                        name: field.name,
+                        id: id
+                    }),
+                    createElement('label', {for: id}, item.name)
+                );
 
-            return acc;
-        }, []);
-
-        return createElement('div', {class: 'checkbox-container'}, checkboxContainer);
+                return acc;
+            }, [])
+        );
     }
 
     getInputByType(field) {
@@ -108,12 +109,9 @@ export const CreateForm = framework.component({
         this.form.append(creatDomElements({
                 tag: 'button',
                 children: this.props.submit.text || CreateForm.DEFAULT_SUBMIT_TEXT,
-                event: {
-                    name: 'click',
-                    callback: (event) => {
-                        event.preventDefault();
-                        this.props.submit.onClick(this._values);
-                    }
+                onClick: (event) => {
+                    event.preventDefault();
+                    this.props.submit.onClick(this._values);
                 }
             })
         );
