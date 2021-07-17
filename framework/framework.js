@@ -1,4 +1,4 @@
-import {map} from './commons.js';
+import {isElement, isFunction, map} from './commons.js';
 
 class Framework {
 
@@ -22,19 +22,22 @@ class Framework {
         return dependency;
     }
 
-    component({name, injected}, dependency) {
+    component({name, injected, hostBinding}, dependency) {
         this._components[name] = {dependency, injected};
 
-        return (...props) => {
-            this._getComponent({name, props});
+        return (host, {props}) => {
+            this._getComponent({host, name, props, hostBinding});
         }
     }
 
-    _getComponent({name, props}) {
+    _getComponent({host, name, props, hostBinding}) {
         const component = this._components[name];
-        const propsArray = Array.isArray(props) ? props : [];
 
-        return new component.dependency(...this._getInjectedItem(component), ...propsArray);
+        props.host = isElement(host) ? host : document.querySelector(host);
+
+        isFunction(hostBinding) && hostBinding(props.host);
+
+        return new component.dependency(...this._getInjectedItem(component), props);
     }
 
     start() {

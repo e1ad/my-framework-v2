@@ -1,4 +1,4 @@
-import {clickOutside, isElement, map, styleElement} from '../../framework/commons.js';
+import {clickOutside, map, styleElement} from '../../framework/commons.js';
 import {MenuItem, MenuListContainer, TriggerButton} from './menu.style.js';
 import {framework} from '../../framework/framework.js';
 
@@ -8,30 +8,30 @@ export const Menu = framework.component({
     injected: []
 }, class Menu {
 
-    constructor(target, config) {
-        this.target = isElement(target) ? target : document.querySelector(target);
-        this.config = config;
+    constructor(props) {
+        this.host = props.host;
+        this.props = props;
 
         this.createTriggerButton();
 
-        config.initOpen && this.onToggle();
+        props.initOpen && this.onToggle();
     }
 
     createTriggerButton() {
         this.triggerButton = TriggerButton({
-            children: this.config.trigger,
+            children: this.props.trigger,
             event: {
                 name: 'click',
                 callback: this.onToggle.bind(this),
             }
         });
 
-        this.target.append(this.triggerButton);
+        this.host.append(this.triggerButton);
     }
 
     createMenuList() {
         const ul = MenuListContainer({
-            children: map(this.config.items, (item) => MenuItem({
+            children: map(this.props.items, (item) => MenuItem({
                 children: item.name,
                 event: {
                     name: 'click',
@@ -42,7 +42,7 @@ export const Menu = framework.component({
 
         const {height, top, left} = this.triggerButton.getBoundingClientRect()
 
-        this.target.append(styleElement(ul, {
+        this.host.append(styleElement(ul, {
             left: `${left}px`,
             top: `${height + top + 2}px`,
         }));
@@ -56,14 +56,14 @@ export const Menu = framework.component({
     onToggle() {
         this.destroyClickOutside && this.destroyClickOutside();
 
-        const ul = this.target.querySelector('ul');
+        const ul = this.host.querySelector('ul');
         ul ? ul.remove() : this.createMenuList();
 
-        this.config.onToggle && this.config.onToggle(!ul);
+        this.props.onToggle && this.props.onToggle(!ul);
     }
 
     onItemClick(item, event) {
-        this.config.closeOnSelect && this.onToggle();
-        this.config.onSelect(item, event);
+        this.props.closeOnSelect && this.onToggle();
+        this.props.onSelect(item, event);
     }
 })

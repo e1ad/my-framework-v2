@@ -10,71 +10,72 @@ framework.start();
 document.addEventListener('DOMContentLoaded', (event) => {
 
     CreateForm('#app-from', {
-        initOpen: false,
-        fields: [
-            {
-                name: 'first_name',
-                type: 'text',
-                label: 'First Name',
-            },
-            {
-                name: 'last_name',
-                type: 'text',
-                label: 'Last Name',
-                validators: [validator.required]
-            },
-            {
-                name: 'age',
-                type: 'number',
-                label: 'Age',
-                attributes: {
-                    min: 0,
-                    step: 1
+        props: {
+            initOpen: false,
+            fields: [
+                {
+                    name: 'first_name',
+                    type: 'text',
+                    label: 'First Name',
                 },
-                validators: [validator.minNumber(18)]
-            },
-            {
-                name: 'county',
-                type: 'select',
-                label: 'County',
-                items: [
-                    {
-                        value: 'li',
-                        name: 'Israel'
+                {
+                    name: 'last_name',
+                    type: 'text',
+                    label: 'Last Name',
+                    validators: [validator.required]
+                },
+                {
+                    name: 'age',
+                    type: 'number',
+                    label: 'Age',
+                    attributes: {
+                        min: 0,
+                        step: 1
                     },
-                    {
-                        value: 'us',
-                        name: 'United State'
-                    }
-                ]
-            },
-            {
-                name: 'city',
-                type: 'checkbox',
-                label: 'City',
-                items: [
-                    {
-                        value: 'li',
-                        name: 'Israel'
-                    },
-                    {
-                        value: 'us',
-                        name: 'United State'
-                    }
-                ]
-            },
-        ],
-        submit: {
-            text: 'Save Now',
-            onClick: (values) => {
-                console.log(values)
+                    validators: [validator.minNumber(18)]
+                },
+                {
+                    name: 'county',
+                    type: 'select',
+                    label: 'County',
+                    items: [
+                        {
+                            value: 'li',
+                            name: 'Israel'
+                        },
+                        {
+                            value: 'us',
+                            name: 'United State'
+                        }
+                    ]
+                },
+                {
+                    name: 'city',
+                    type: 'checkbox',
+                    label: 'City',
+                    items: [
+                        {
+                            value: 'li',
+                            name: 'Israel'
+                        },
+                        {
+                            value: 'us',
+                            name: 'United State'
+                        }
+                    ]
+                },
+            ],
+            submit: {
+                text: 'Save Now',
+                onClick: (values) => {
+                    console.log(values)
+                }
             }
         }
     });
 
-
-    Menu('#menu',
-        {
+    Menu('#menu', {
+        props: {
             trigger: 'Hello world',
             closeOnSelect: true,
             onToggle: (isOpen) => {
@@ -95,6 +96,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 }
             ]
         }
-    )
+    });
 
 });
