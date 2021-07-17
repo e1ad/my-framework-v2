@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     });
 
-    Menu('#menu', {
+    const menu = Menu('#menu', {
         props: {
             trigger: 'Hello world',
             closeOnSelect: true,
@@ -83,6 +83,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
             },
             onSelect: (item) => {
                 console.log(item);
+            },
+            onDestroy: () => {
+                console.log('menu destroyed')
             },
             items: [
                 {
@@ -96,6 +99,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
                 }
             ]
         }
+    });
+
+    document.querySelector('.destroy-menu-button').addEventListener('click', () => {
+        menu.host.remove();
     });
 
 });

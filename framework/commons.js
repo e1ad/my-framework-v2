@@ -103,6 +103,14 @@ export const find = (array, callback) => {
     }
 };
 
+export const some = (array, callback) => {
+    if (Array.isArray(array) && array.length) {
+        return array.some(callback);
+    }
+
+    return false;
+};
+
 export const map = (array, callback) => {
     if (Array.isArray(array) && array.length) {
         return array.map(callback);
@@ -134,3 +142,5 @@ export const clickOutside = (element, {whitelist, onClick}) => {
 
     return destroyClickOutside;
 };
+
+export const noop = () => null;

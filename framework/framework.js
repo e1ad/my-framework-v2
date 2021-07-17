@@ -1,4 +1,4 @@
-import {isElement, isFunction, map} from './commons.js';
+import {isElement, isFunction, map, some} from './commons.js';
 
 class Framework {
 
@@ -26,7 +26,7 @@ class Framework {
         this._components[name] = {dependency, injected};
 
         return (host, {props}) => {
-            this._getComponent({host, name, props, hostBinding});
+            return this._getComponent({host, name, props, hostBinding});
         }
     }
 
@@ -37,7 +37,22 @@ class Framework {
 
         isFunction(hostBinding) && hostBinding(props.host);
 
-        return new component.dependency(...this._getInjectedItem(component), props);
+        const dependency = new component.dependency(...this._getInjectedItem(component), props);
+
+        if (isFunction(dependency.onDestroy)) {
+            const observer = new MutationObserver((event) => {
+                const isHostElement = some([...event[0].removedNodes], el => el === props.host);
+
+                if (isHostElement) {
+                    dependency.onDestroy();
+                    observer.disconnect();
+                }
+            });
+
+            observer.observe(props.host.parentNode, {childList: true});
+        }
+
+        return dependency;
     }
 
     start() {

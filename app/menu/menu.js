@@ -1,4 +1,4 @@
-import {clickOutside, map, styleElement} from '../../framework/commons.js';
+import {clickOutside, map, noop, styleElement} from '../../framework/commons.js';
 import {MenuItem, MenuListContainer, TriggerButton} from './menu.style.js';
 import {framework} from '../../framework/framework.js';
 
@@ -7,6 +7,7 @@ export const Menu = framework.component({
     name: 'Menu',
     injected: []
 }, class Menu {
+    destroyClickOutside = noop;
 
     constructor(props) {
         this.host = props.host;
@@ -48,7 +49,7 @@ export const Menu = framework.component({
     }
 
     onToggle() {
-        this.destroyClickOutside && this.destroyClickOutside();
+        this.destroyClickOutside();
 
         const ul = this.host.querySelector('ul');
         ul ? ul.remove() : this.createMenuList();
@@ -59,5 +60,10 @@ export const Menu = framework.component({
     onItemClick(item, event) {
         this.props.closeOnSelect && this.onToggle();
         this.props.onSelect && this.props.onSelect(item, event);
+    }
+
+    onDestroy(){
+        this.destroyClickOutside();
+        this.props.onDestroy && this.props.onDestroy();
     }
 })
