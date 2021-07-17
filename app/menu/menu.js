@@ -58,6 +58,6 @@ export const Menu = framework.component({
 
     onItemClick(item, event) {
         this.props.closeOnSelect && this.onToggle();
-        this.props.onSelect(item, event);
+        this.props.onSelect && this.props.onSelect(item, event);
     }
 })
