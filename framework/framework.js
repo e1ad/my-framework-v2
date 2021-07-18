@@ -25,12 +25,12 @@ class Framework {
     component({name, injected, hostBinding}, dependency) {
         this._components[name] = {dependency, injected};
 
-        return (host, {props}) => {
+        return (host, {props} = {}) => {
             return this._getComponent({host, name, props, hostBinding});
         }
     }
 
-    _getComponent({host, name, props, hostBinding}) {
+    _getComponent({host, name, props = {}, hostBinding}) {
         const component = this._components[name];
 
         props.host = isElement(host) ? host : document.querySelector(host);
@@ -41,7 +41,7 @@ class Framework {
 
         if (isFunction(dependency.onDestroy)) {
             const observer = new MutationObserver((event) => {
-                const isHostElement = some([...event[0].removedNodes], el =>  el.isEqualNode(props.host));
+                const isHostElement = some([...event[0].removedNodes], el => el.isEqualNode(props.host));
 
                 if (isHostElement) {
                     dependency.onDestroy();
