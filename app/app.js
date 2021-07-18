@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 
     document.querySelector('.destroy-menu-button').addEventListener('click', () => {
-        menu.host.remove();
+        menu.props.host.remove();
     });
 
 });
