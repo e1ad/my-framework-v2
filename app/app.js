@@ -3,7 +3,7 @@ import {Menu} from './menu/menu.js';
 import {framework} from '../framework/framework.js';
 import {TestAService} from './services/serviceA.js';
 import {TestBService} from './services/ServiceB.js';
-import {creatDomElements, createElement} from '../framework/commons.js';
+import {creatDomElements} from '../framework/commons.js';
 
 
 framework.start();
