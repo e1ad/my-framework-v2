@@ -8,53 +8,50 @@ export const Menu = framework.component({
     injected: []
 }, class Menu {
     destroyClickOutside = noop;
+    isMenuOpen = false;
 
     constructor(props) {
         this.host = props.host;
         this.props = props;
-
-        this.createTriggerButton();
-
-        props.initOpen && this.onToggle();
     }
 
-    createTriggerButton() {
-        this.triggerButton = TriggerButton({
-            children: this.props.trigger,
-            onClick: this.onToggle.bind(this),
-        });
-
-        this.host.append(this.triggerButton);
-    }
-
-    createMenuList() {
-        const ul = MenuListContainer({
+    getMenuList() {
+        return MenuListContainer({
+            ref: (ul) => this.ul = ul,
             children: map(this.props.items, (item) => MenuItem({
                 children: item.name,
                 onClick: (event) => this.onItemClick(item, event)
             }))
         });
+    }
 
-        const {height, top, left} = this.triggerButton.getBoundingClientRect()
+    onRendered(){
+        if(!this.ul){
+            return
+        }
 
-        this.host.append(styleElement(ul, {
-            left: `${left}px`,
-            top: `${height + top + 2}px`,
-        }));
-
-        this.destroyClickOutside = clickOutside(ul, {
+        this.destroyClickOutside = clickOutside(this.ul, {
             whitelist: [this.triggerButton],
             onClick: this.onToggle.bind(this)
+        });
+
+        const {height, top, left} = this.triggerButton.getBoundingClientRect();
+
+        styleElement(this.ul, {
+            left: `${left}px`,
+            top: `${height + top + 2}px`,
         });
     }
 
     onToggle() {
+        this.ul = null;
         this.destroyClickOutside();
 
-        const ul = this.host.querySelector('ul');
-        ul ? ul.remove() : this.createMenuList();
+        this.isMenuOpen = !this.isMenuOpen;
 
-        this.props.onToggle && this.props.onToggle(!ul);
+        this.forceUpdate();
+
+        this.props.onToggle && this.props.onToggle(this.isMenuOpen);
     }
 
     onItemClick(item, event) {
@@ -62,8 +59,19 @@ export const Menu = framework.component({
         this.props.onSelect && this.props.onSelect(item, event);
     }
 
-    onDestroy(){
+    onDestroy() {
         this.destroyClickOutside();
         this.props.onDestroy && this.props.onDestroy();
+    }
+
+    render() {
+        return [
+            TriggerButton({
+                children: this.props.trigger,
+                onClick: this.onToggle.bind(this),
+                ref: (el) => this.triggerButton = el
+            }),
+            this.isMenuOpen && this.getMenuList()
+        ]
     }
 })

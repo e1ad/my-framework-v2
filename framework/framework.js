@@ -1,4 +1,4 @@
-import {isElement, isFunction, map, some} from './commons.js';
+import {castArray, isElement, isFunction, map, some} from './commons.js';
 
 class Framework {
 
@@ -50,6 +50,16 @@ class Framework {
             });
 
             observer.observe(props.host.parentNode, {childList: true});
+        }
+
+        if (isFunction(dependency.render)) {
+            dependency.forceUpdate = (onUpdateDone) => {
+                const children = castArray(dependency.render()).filter(isElement);
+                props.host.replaceChildren(...children);
+                isFunction(dependency.onRendered) && dependency.onRendered();
+            }
+
+            dependency.forceUpdate();
         }
 
         return dependency;

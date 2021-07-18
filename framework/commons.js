@@ -30,6 +30,10 @@ export const creatDomElements = (item) => {
         element.addEventListener(item.event.name, item.event.callback, false);
     }
 
+    if(isFunction(item.ref)){
+        item.ref(element);
+    }
+
     return element;
 };
 
@@ -42,20 +46,22 @@ const appendChild = (child, element) => {
     }
 };
 
-export const style = (tag, style) => {
+export const style = (tag, _style) => {
 
     const head = document.querySelector('head');
     const className = `className_${Math.floor(Math.random() * 1000) + 1}`;
-    const styleText = (isFunction(style) ? style() : style).replaceAll(':host', `.${className}`);
+    const styleText = (isFunction(_style) ? _style() : _style).replaceAll(':host', `.${className}`);
 
     head.append(createElement('style', null, styleText));
 
-    return ({children, attr = {}, event, onClick}) => {
+    return ({children, attr = {}, ref, event, onClick, style}) => {
         return creatDomElements({
             tag,
             attr: {...attr, class: `${className} ${attr.class || ''}`},
+            ref,
             event,
             onClick,
+            style,
             children
         });
     };
@@ -134,7 +140,7 @@ export const clickOutside = (element, {whitelist, onClick}) => {
     const whitelistedElements = map(whitelist, (i) => isElement(i) ? i : document.querySelector(i));
 
     const destroyClickOutside = createEventListener(document, 'click', (event) => {
-        if (!element.contains(event.target) && !whitelistedElements.includes(event.target)) {
+        if (!element.contains(event.target) && !whitelistedElements.some(el => event.target.isEqualNode(el))) {
             onClick();
             destroyClickOutside();
         }

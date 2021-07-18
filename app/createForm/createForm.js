@@ -2,12 +2,12 @@ import {
     createElement,
     creatDomElements,
     createEventListener,
-    forEach,
     find,
     isNil,
     reduce,
     styleElement,
-    isNumber
+    isNumber,
+    map
 } from '../../framework/commons.js';
 import {ERROR_MESSAGE, ERROR_CODE} from './form.const.js';
 import {ErrorContainer, FieldContainer} from './createForm.style.js';
@@ -27,27 +27,22 @@ export const CreateForm = framework.component({
 
     constructor(props) {
         this.props = props;
-        this.form = props.host;
-        createEventListener(this.form, 'change', this.onFormChange.bind(this));
-        this.createFields();
-        this.createSubmitButton();
+        createEventListener(props.host, 'change', this.onFormChange.bind(this));
     }
 
-    createFields() {
-        forEach(this.props.fields, (field) => {
-            this.form.append(FieldContainer({
-                    attr: {field: field.name},
-                    children: [
-                        {
-                            tag: 'label',
-                            children: field.label
-                        },
-                        this.getInputByType(field),
-                        ErrorContainer({attr: {class: CreateForm.ERROR_CONTAINER_CLASS}})
-                    ]
-                })
-            );
-        });
+    getFields() {
+        return map(this.props.fields, (field) => FieldContainer({
+                attr: {field: field.name},
+                children: [
+                    {
+                        tag: 'label',
+                        children: field.label
+                    },
+                    this.getInputByType(field),
+                    ErrorContainer({attr: {class: CreateForm.ERROR_CONTAINER_CLASS}})
+                ]
+            })
+        );
     }
 
     getDefaultInput(field) {
@@ -105,20 +100,19 @@ export const CreateForm = framework.component({
         }
     }
 
-    createSubmitButton() {
-        this.form.append(creatDomElements({
-                tag: 'button',
-                children: this.props.submit.text || CreateForm.DEFAULT_SUBMIT_TEXT,
-                onClick: (event) => {
-                    event.preventDefault();
-                    this.props.submit.onClick(this._values);
-                }
-            })
-        );
+    getSubmitButton() {
+        return creatDomElements({
+            tag: 'button',
+            children: this.props.submit.text || CreateForm.DEFAULT_SUBMIT_TEXT,
+            onClick: (event) => {
+                event.preventDefault();
+                this.props.submit.onClick(this._values);
+            }
+        });
     }
 
     getFieldElement(field) {
-        return this.form.querySelector(`[field=${field.name}]`);
+        return this.props.host.querySelector(`[field=${field.name}]`);
     }
 
     getFieldErrors(field) {
@@ -161,6 +155,13 @@ export const CreateForm = framework.component({
         const field = find(this.props.fields, field => field.name === name);
         this._values[name] = this.getValueByType(field, input);
         this.handleError(field, input);
+    }
+
+    render() {
+        return [
+            ...this.getFields(),
+            this.getSubmitButton()
+        ]
     }
 })
 
