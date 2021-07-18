@@ -1,10 +1,10 @@
 {
-  "version": 3,
-  "mappings": "ACAA,AAAA,sBAAsB,CAAA;EAClB,OAAO,EAAE,WAAW;EACpB,cAAc,EAAE,MAAM;CACzB",
-  "sources": [
-    "styles.scss",
-    "createForm/createForm.scss"
-  ],
-  "names": [],
-  "file": "styles.css"
+    "version": 3,
+    "mappings": "ACAA,AAAA,sBAAsB,CAAC,IAAI,CAAA;EACzB,OAAO,EAAE,WAAW;EACpB,cAAc,EAAE,MAAM;CACvB",
+    "sources": [
+        "styles.scss",
+        "createForm/createForm.scss"
+    ],
+    "names": [],
+    "file": "styles.css"
 }

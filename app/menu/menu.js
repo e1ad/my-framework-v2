@@ -11,7 +11,6 @@ export const Menu = framework.component({
     isMenuOpen = false;
 
     constructor(props) {
-        this.host = props.host;
         this.props = props;
     }
 
@@ -72,6 +71,6 @@ export const Menu = framework.component({
                 ref: (el) => this.triggerButton = el
             }),
             this.isMenuOpen && this.getMenuList()
-        ]
+        ];
     }
 })

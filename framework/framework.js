@@ -41,7 +41,7 @@ class Framework {
 
         if (isFunction(dependency.onDestroy)) {
             const observer = new MutationObserver((event) => {
-                const isHostElement = some([...event[0].removedNodes], el => el === props.host);
+                const isHostElement = some([...event[0].removedNodes], el =>  el.isEqualNode(props.host));
 
                 if (isHostElement) {
                     dependency.onDestroy();

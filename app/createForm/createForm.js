@@ -23,23 +23,25 @@ export const CreateForm = framework.component({
     static DEFAULT_SUBMIT_TEXT = 'Save';
     static ERROR_CONTAINER_CLASS = 'error-container';
 
+    _errorsRef = {}
     _values = {};
 
     constructor(props) {
         this.props = props;
-        createEventListener(props.host, 'change', this.onFormChange.bind(this));
     }
 
     getFields() {
         return map(this.props.fields, (field) => FieldContainer({
-                attr: {field: field.name},
                 children: [
                     {
                         tag: 'label',
                         children: field.label
                     },
                     this.getInputByType(field),
-                    ErrorContainer({attr: {class: CreateForm.ERROR_CONTAINER_CLASS}})
+                    ErrorContainer({
+                        attr: {class: CreateForm.ERROR_CONTAINER_CLASS},
+                        ref: (el) => this._errorsRef[field.name] = el,
+                    })
                 ]
             })
         );
@@ -111,10 +113,6 @@ export const CreateForm = framework.component({
         });
     }
 
-    getFieldElement(field) {
-        return this.props.host.querySelector(`[field=${field.name}]`);
-    }
-
     getFieldErrors(field) {
         return reduce(field.validators, (acc, validator) => {
             const error = validator(field, this._values) || {};
@@ -127,13 +125,12 @@ export const CreateForm = framework.component({
     }
 
     handleError(field, input) {
-        const errorElement = this.getFieldElement(field).querySelector(`.${CreateForm.ERROR_CONTAINER_CLASS}`);
         const error = this.getFieldErrors(field);
 
         const isRequired = this.getErrorMessage(error, ERROR_CODE.REQUIRED);
         const isMin = this.getErrorMessage(error, ERROR_CODE.MIN_NUMBER);
 
-        errorElement.innerText = isRequired + isMin;
+        this._errorsRef[field.name].innerText = isRequired + isMin;
 
         styleElement(input, {border: `solid 1px ${isRequired || isMin ? 'red' : 'black'}`})
     }
@@ -159,9 +156,18 @@ export const CreateForm = framework.component({
 
     render() {
         return [
-            ...this.getFields(),
-            this.getSubmitButton()
-        ]
+            creatDomElements({
+                tag: 'form',
+                event: {
+                    name: 'change',
+                    callback: this.onFormChange.bind(this)
+                },
+                children: [
+                    ...this.getFields(),
+                    this.getSubmitButton()
+                ]
+            })
+        ];
     }
 })
 
