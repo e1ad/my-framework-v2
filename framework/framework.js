@@ -53,7 +53,7 @@ class Framework {
         }
 
         if (isFunction(dependency.render)) {
-            dependency.forceUpdate = (onUpdateDone) => {
+            dependency.forceUpdate = () => {
                 const children = castArray(dependency.render()).filter(isElement);
                 props.host.replaceChildren(...children);
                 isFunction(dependency.onRendered) && dependency.onRendered();
