@@ -14,7 +14,7 @@ const App = framework.component({
     }, class App {
 
         onRendered() {
-            this.menu = Menu('#menu', {
+            this.menu = Menu(this.menuRef, {
                 props: {
                     trigger: 'Hello world',
                     closeOnSelect: true,
@@ -42,7 +42,7 @@ const App = framework.component({
             })
 
 
-            CreateForm('#app-from', {
+            CreateForm(this.createFormRef, {
                 props: {
                     initOpen: false,
                     fields: [
@@ -110,30 +110,41 @@ const App = framework.component({
         }
 
         render() {
-            return [
-                createElement('div', {id: 'menu'}),
-                createElement('br'),
-                creatDomElements({
-                    tag: 'div',
-                    children: [{
-                        tag: 'button',
-                        onClick: () => {
-                            this.menu.props.host.remove();
-                        },
-                        children: 'destroy menu'
-                    }]
-                }),
-                createElement('br'),
-                createElement('div', {id: 'app-from'})
-            ]
+            return creatDomElements({
+                tag: 'div',
+                children: [
+                    {
+                        tag: 'div',
+                        ref: (el) => this.menuRef = el
+                    },
+                    {
+                        tag: 'br'
+                    },
+                    {
+                        tag: 'div',
+                        children: [{
+                            tag: 'button',
+                            onClick: () => {
+                                this.menu.props.host.remove();
+                            },
+                            children: 'destroy menu'
+                        }]
+                    },
+                    {
+                        tag: 'br'
+                    },
+                    {
+                        tag: 'div',
+                        ref: (el) => this.createFormRef = el
+                    }
+                ]
+            });
         }
 
     }
 )
 
 
-document.addEventListener('DOMContentLoaded', (event) => {
-
-    App('#root')
-
+document.addEventListener('DOMContentLoaded', () => {
+    App('#root');
 });
