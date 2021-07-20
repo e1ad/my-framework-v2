@@ -22,7 +22,7 @@ export const TestAService = framework.service({
 )
 // inject the service to another service
 export const TestBService = framework.service({  
-   name: 'TestBService',  
+  name: 'TestBService',  
   injected: ['TestAService'],  
 }, function (TestAService) {  
    }
