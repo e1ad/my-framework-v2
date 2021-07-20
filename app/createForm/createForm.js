@@ -1,17 +1,15 @@
 import {
-    createElement,
-    creatDomElements,
-    createEventListener,
     find,
     isNil,
     reduce,
-    styleElement,
     isNumber,
     map
 } from '../../framework/commons.js';
+import {createElement, creatDomElements, styleElement} from '../../framework/dom.js'
 import {ERROR_MESSAGE, ERROR_CODE} from './form.const.js';
 import {ErrorContainer, FieldContainer} from './createForm.style.js';
 import {framework} from '../../framework/framework.js';
+import {el} from '../../framework/dom.js';
 
 export const CreateForm = framework.component({
     name: 'CreateForm',
@@ -39,7 +37,7 @@ export const CreateForm = framework.component({
                     },
                     this.getInputByType(field),
                     ErrorContainer({
-                        attr: {class: CreateForm.ERROR_CONTAINER_CLASS},
+                        attr: `class=${CreateForm.ERROR_CONTAINER_CLASS}`,
                         ref: (el) => this._errorsRef[field.name] = el,
                     })
                 ]
@@ -71,8 +69,7 @@ export const CreateForm = framework.component({
     getCheckboxInput(field) {
         this._values[field.name] = {};
 
-        return createElement('div',
-            {class: 'checkbox-container'},
+        return el('div', 'class=checkbox-container')(
             reduce(field.items, (acc, item) => {
                 const id = `${field.name}-${item.name}`;
 

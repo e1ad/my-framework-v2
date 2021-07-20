@@ -1,7 +1,7 @@
 import {framework} from '../../framework/framework.js';
 import {Menu} from '../menu/menu.js';
 import {CreateForm, validator} from '../createForm/createForm.js';
-import {creatDomElements} from '../../framework/commons.js';
+import {creatDomElements} from '../../framework/dom.js';
 
 export const Demo = framework.component({
     name: 'Demo',

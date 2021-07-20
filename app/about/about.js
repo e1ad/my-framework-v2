@@ -1,5 +1,5 @@
 import {framework} from '../../framework/framework.js';
-import {createElement} from '../../framework/commons.js';
+import {createElement} from '../../framework/dom.js';
 
 export const About = framework.component({
     name: 'About',

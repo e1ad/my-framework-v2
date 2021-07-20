@@ -1,4 +1,4 @@
-import {style} from '../../framework/commons.js';
+import {style} from '../../framework/dom.js';
 
 export const FieldContainer = style('div', `
     :host {

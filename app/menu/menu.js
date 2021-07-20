@@ -1,7 +1,7 @@
-import {clickOutside, map, noop, styleElement} from '../../framework/commons.js';
+import {clickOutside, map, noop} from '../../framework/commons.js';
+import {styleElement} from '../../framework/dom.js';
 import {MenuItem, MenuListContainer, TriggerButton} from './menu.style.js';
 import {framework} from '../../framework/framework.js';
-
 
 export const Menu = framework.component({
     name: 'Menu',

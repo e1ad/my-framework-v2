@@ -1,5 +1,5 @@
 import {framework} from '../../framework/framework.js';
-import {creatDomElements} from '../../framework/commons.js';
+import {el} from '../../framework/dom.js';
 
 export const Home = framework.component({
     name: 'Home',
@@ -7,30 +7,9 @@ export const Home = framework.component({
 }, class Home {
 
     render() {
-        return creatDomElements({
-            tag: 'ul',
-            children: [
-                {
-                    tag: 'li',
-                    children: [
-                        {
-                            tag: 'a',
-                            attr: {href: '#/demo'},
-                            children: 'Demo'
-                        },
-                    ]
-                },
-                {
-                    tag: 'li',
-                    children: [
-                        {
-                            tag: 'a',
-                            attr: {href: '#/about'},
-                            children: 'About'
-                        },
-                    ]
-                }
-            ]
-        });
+        return el('ul')([
+            el('li')(el('a', 'href=#/demo')('Demo')),
+            el('li')(el('a', 'href=#/about')('About'))
+        ]);
     }
 });
