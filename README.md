@@ -22,7 +22,8 @@ export const TestAService = framework.service({
 )
 // inject the service to another service
 export const TestBService = framework.service({  
-  name: 'TestBService',  
+  name: 'TestBService',
+  singleton: true, // create a single instance for this service
   injected: ['TestAService'],  
 }, function (TestAService) {  
    }
