@@ -1,7 +1,8 @@
 import {framework} from '../../framework/framework.js';
 import {Menu} from '../menu/menu.js';
 import {CreateForm, validator} from '../createForm/createForm.js';
-import {creatDomElements} from '../../framework/dom.js';
+import {creatDomElements, el} from '../../framework/dom.js';
+import {GoBackButton} from '../goBack/goBack.js';
 
 export const Demo = framework.component({
     name: 'Demo',
@@ -108,36 +109,31 @@ export const Demo = framework.component({
     }
 
     render() {
-        return creatDomElements({
-            tag: 'div',
-            children: [
+        return el('div')([
+                creatDomElements({
+                    tag:'div',
+                    ref: el => GoBackButton(el)
+                }),
                 {
                     tag: 'div',
-                    ref: (el) => {
-                        this.menuRef = el
-                    }
+                    ref: (el) => this.menuRef = el
                 },
-                {
-                    tag: 'br'
-                },
-                {
-                    tag: 'div',
-                    children: [{
+                el('br')(),
+                el('div')([
+                    {
                         tag: 'button',
+                        children: 'destroy menu',
                         onClick: () => {
                             this.menu.props.host.remove();
                         },
-                        children: 'destroy menu'
-                    }]
-                },
-                {
-                    tag: 'br'
-                },
+                    }
+                ]),
+                el('br')(),
                 {
                     tag: 'div',
                     ref: (el) => this.createFormRef = el
                 }
             ]
-        });
+        );
     }
 });

@@ -1,18 +1,16 @@
 import {framework} from './framework.js';
-import {createEventListener} from './commons.js';
+import {RouteService} from './routeService.js';
 
 export const Routes = framework.component({
     name: 'Routes',
-    injected: [],
+    injected: ['RouteService', 'Broadcast'],
 }, class Routes {
 
-    constructor(props) {
+    constructor(RouteService, Broadcast, props) {
+        this.routeService = RouteService;
         this.props = props;
 
-        const routeChange = this.routeChange.bind(this);
-
-        createEventListener(window, 'DOMContentLoaded', routeChange);
-        createEventListener(window, 'hashchange', routeChange);
+        Broadcast.on('routeChange', this.routeChange.bind(this));
     }
 
     loadComponent(route) {
@@ -25,9 +23,10 @@ export const Routes = framework.component({
         const hash = window.location.hash.substr(1);
 
         if (routes[hash]) {
+            this.routeService.addHistory(hash);
             this.loadComponent(routes[hash])
         } else {
-            window.location.hash = '/';
+            this.routeService.addHistory('/');
             this.loadComponent(routes['/'])
         }
     }

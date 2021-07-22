@@ -14,9 +14,6 @@ import {el} from '../../framework/dom.js';
 export const CreateForm = framework.component({
     name: 'CreateForm',
     injected: [],
-    hostBinding: (host) => {
-        host.classList.add('create-from-container');
-    },
 }, class CreateForm {
     static DEFAULT_SUBMIT_TEXT = 'Save';
     static ERROR_CONTAINER_CLASS = 'error-container';
@@ -26,15 +23,13 @@ export const CreateForm = framework.component({
 
     constructor(props) {
         this.props = props;
+        props.host.classList.add('create-from-container');
     }
 
     getFields() {
         return map(this.props.fields, (field) => FieldContainer({
                 children: [
-                    {
-                        tag: 'label',
-                        children: field.label
-                    },
+                    el('label')(field.label),
                     this.getInputByType(field),
                     ErrorContainer({
                         attr: `class=${CreateForm.ERROR_CONTAINER_CLASS}`,
@@ -71,16 +66,16 @@ export const CreateForm = framework.component({
 
         return el('div', 'class=checkbox-container')(
             reduce(field.items, (acc, item) => {
-                const id = `${field.name}-${item.name}`;
+                const id = `${field.name}-${item.name}`.replaceAll(' ','_');
 
                 acc.push(
-                    createElement('input', {
+                    el('input', {
                         type: 'checkbox',
                         value: item.value,
                         name: field.name,
-                        id: id
-                    }),
-                    createElement('label', {for: id}, item.name)
+                        id
+                    })(),
+                    el('label', {for: id})(item.name)
                 );
 
                 return acc;

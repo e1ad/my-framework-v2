@@ -6,7 +6,9 @@ export const createElement = (tag, attributes = {}, children) => {
     const _attributes = getAttributes(attributes);
 
     for (let key in _attributes) {
-        element.setAttribute(key, _attributes[key]);
+        if (_attributes.hasOwnProperty(key)) {
+            element.setAttribute(key, _attributes[key]);
+        }
     }
 
     forEach(

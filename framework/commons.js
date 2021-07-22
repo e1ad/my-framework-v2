@@ -1,4 +1,3 @@
-
 export const castArray = (value) => Array.isArray(value) ? value : [value];
 
 export const isPrimitive = (value) => isString(value) || isNumber(value);
@@ -19,9 +18,13 @@ export const createEventListener = (element, event, callback) => {
     };
 };
 
-export const forEach = (array, callback) => {
-    if (Array.isArray(array) && array.length) {
-        array.forEach(callback);
+export const forEach = (object, callback) => {
+    if (object && typeof object === 'object') {
+        for (let key in object) {
+            if (object.hasOwnProperty(key)) {
+                callback(object[key], key);
+            }
+        }
     }
 };
 
