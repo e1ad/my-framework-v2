@@ -1,4 +1,4 @@
-import {castArray, forEach, isElement, isFunction, isPrimitive, isString, reduce} from './commons.js';
+import {castArray, forEach, isElement, isFunction, isPlainObject, isPrimitive, isString, reduce} from './commons.js';
 
 export const createElement = (tag, attributes = {}, children) => {
     const element = document.createElement(tag);
@@ -30,9 +30,10 @@ const appendChild = (child, element) => {
 };
 
 export const el = (tag, attr) => {
-    return (children) => {
-        return creatDomElements({tag, attr, children});
-    }
+    return (data) => {
+        const args = isPlainObject(data) && !isElement(data) ? data : {children: data};
+        return creatDomElements({tag, attr, ...args});
+    };
 };
 
 
@@ -110,3 +111,17 @@ export const creatDomElements = (item) => {
 
     return element;
 };
+
+
+export const component = (_component, args = {}) => {
+    return (props) => {
+        return creatDomElements({
+            tag: 'div',
+            ...args,
+            ref: el => {
+                const componentInstance = _component(el, {props});
+                args.ref && args.ref(componentInstance);
+            },
+        });
+    }
+}

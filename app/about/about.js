@@ -1,5 +1,5 @@
 import {framework} from '../../framework/framework.js';
-import {creatDomElements, el} from '../../framework/dom.js';
+import {component, el} from '../../framework/dom.js';
 import {GoBackButton} from '../goBack/goBack.js';
 
 export const About = framework.component({
@@ -9,10 +9,7 @@ export const About = framework.component({
 
     render() {
         return [
-            creatDomElements({
-               tag:'div',
-               ref: el => GoBackButton(el)
-            }),
+            component(GoBackButton)(),
             el('br')(),
             el('div')('About page')
         ];

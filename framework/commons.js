@@ -10,6 +10,8 @@ export const isNumber = (value) => typeof (value) === 'number' && !isNaN(value);
 
 export const isElement = (value) => value instanceof Element;
 
+export const isPlainObject = (value) => value && typeof (value) === 'object' && !Array.isArray(value);
+
 export const createEventListener = (element, event, callback) => {
     element.addEventListener(event, callback, false);
 

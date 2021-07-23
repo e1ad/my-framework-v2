@@ -1,7 +1,7 @@
 import {framework} from '../../framework/framework.js';
 import {Menu} from '../menu/menu.js';
 import {CreateForm, validator} from '../createForm/createForm.js';
-import {creatDomElements, el} from '../../framework/dom.js';
+import {component, el} from '../../framework/dom.js';
 import {GoBackButton} from '../goBack/goBack.js';
 
 export const Demo = framework.component({
@@ -35,7 +35,6 @@ export const Demo = framework.component({
     };
 
     createFormProps = {
-        initOpen: false,
         fields: [
             {
                 name: 'first_name',
@@ -97,43 +96,25 @@ export const Demo = framework.component({
         }
     };
 
-
-    onRendered() {
-        this.menu = Menu(this.menuRef, {
-            props: this.menuProps
-        });
-
-        CreateForm(this.createFormRef, {
-            props: this.createFormProps
-        });
+    onDomReady() {
+        console.log('onDomReady');
     }
 
     render() {
         return el('div')([
-                creatDomElements({
-                    tag:'div',
-                    ref: el => GoBackButton(el)
-                }),
-                {
-                    tag: 'div',
-                    ref: (el) => this.menuRef = el
-                },
-                el('br')(),
-                el('div')([
-                    {
-                        tag: 'button',
-                        children: 'destroy menu',
-                        onClick: () => {
-                            this.menu.props.host.remove();
-                        },
-                    }
-                ]),
-                el('br')(),
-                {
-                    tag: 'div',
-                    ref: (el) => this.createFormRef = el
-                }
-            ]
-        );
+            component(GoBackButton)(),
+            component(Menu, {ref: el => this.menu = el})(this.menuProps),
+            el('br')(),
+            el('div')(
+                el('button')({
+                    children: 'destroy menu',
+                    onClick: () => {
+                        this.menu.props.host.remove();
+                    },
+                })
+            ),
+            el('br')(),
+            component(CreateForm)(this.createFormProps),
+        ]);
     }
 });

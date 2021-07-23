@@ -12,6 +12,7 @@ export const Menu = framework.component({
 
     constructor(props) {
         this.props = props;
+        this.isMenuOpen = props.initOpen;
     }
 
     getMenuList() {
@@ -24,10 +25,12 @@ export const Menu = framework.component({
         });
     }
 
-    onRendered(){
-        if(!this.ul){
+    onRendered() {
+        if (!this.ul) {
             return
         }
+
+        this.destroyClickOutside();
 
         this.destroyClickOutside = clickOutside(this.ul, {
             whitelist: [this.triggerButton],
@@ -42,9 +45,12 @@ export const Menu = framework.component({
         });
     }
 
+    onDomReady() {
+        this.onRendered();
+    }
+
     onToggle() {
         this.ul = null;
-        this.destroyClickOutside();
 
         this.isMenuOpen = !this.isMenuOpen;
 

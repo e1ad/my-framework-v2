@@ -29,6 +29,35 @@ class Framework {
         return dependency;
     }
 
+    _onDomReady(dependency, props) {
+        if (isFunction(dependency.onDestroy)) {
+            const observer = new MutationObserver((event) => {
+                const isHostElement = some([...event[0].removedNodes], el => el.isEqualNode(props.host));
+
+                if (isHostElement) {
+                    dependency.onDestroy();
+                    observer.disconnect();
+                }
+            });
+
+            observer.observe(props.host.parentNode, {childList: true});
+        }
+
+        isFunction(dependency.onDomReady) && dependency.onDomReady();
+    }
+
+    _onRender(dependency, props) {
+        if (isFunction(dependency.render)) {
+            dependency.forceUpdate = () => {
+                const children = castArray(dependency.render()).filter(isElement);
+                props.host.replaceChildren(...children);
+                isFunction(dependency.onRendered) && dependency.onRendered();
+            }
+
+            dependency.forceUpdate();
+        }
+    }
+
     component({name, injected}, dependency) {
         return (host, {props} = {}) => {
             return this._getComponent({host, props, dependency, injected});
@@ -41,28 +70,11 @@ class Framework {
 
         const _dependency = new dependency(...this._getInjectedItem({injected}), props);
 
-        if (isFunction(_dependency.onDestroy)) {
-            const observer = new MutationObserver((event) => {
-                const isHostElement = some([...event[0].removedNodes], el => el.isEqualNode(props.host));
+        this._onRender(_dependency, props);
 
-                if (isHostElement) {
-                    _dependency.onDestroy();
-                    observer.disconnect();
-                }
-            });
-
-            observer.observe(props.host.parentNode, {childList: true});
-        }
-
-        if (isFunction(_dependency.render)) {
-            _dependency.forceUpdate = () => {
-                const children = castArray(_dependency.render()).filter(isElement);
-                props.host.replaceChildren(...children);
-                isFunction(_dependency.onRendered) && _dependency.onRendered();
-            }
-
-            _dependency.forceUpdate();
-        }
+        setTimeout(() => {
+            this._onDomReady(_dependency, props);
+        });
 
         return _dependency;
     }
