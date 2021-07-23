@@ -9,32 +9,29 @@ import {Demo} from './demo/demo.js';
 framework.start();
 
 const App = framework.component({
-        name: 'App',
-        injected: []
-    }, class App {
+    name: 'App',
+    injected: []
+}, function (props) {
 
-        routes = {
-            '/': {
-                name: 'home',
-                component: Home
-            },
-            '/about': {
-                name: 'about',
-                component: About
-            },
-            '/demo': {
-                name: 'about',
-                component: Demo
-            }
-        };
-
-        constructor(props) {
-            Routes(props.host, {
-                props: {routes: this.routes}
-            })
+    const routes = {
+        '/': {
+            name: 'home',
+            component: Home
+        },
+        '/about': {
+            name: 'about',
+            component: About
+        },
+        '/demo': {
+            name: 'about',
+            component: Demo
         }
-    }
-);
+    };
+
+    Routes(props.host, {
+        props: {routes: routes}
+    });
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     App('#root');

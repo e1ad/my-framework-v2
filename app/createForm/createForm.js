@@ -41,24 +41,22 @@ export const CreateForm = framework.component({
     }
 
     getDefaultInput(field) {
-        return createElement('input', {
+        return el('input', {
             type: field.type,
             name: field.name,
             ...field.attributes
-        });
+        })();
     }
 
     getSelectInput(field) {
-        return creatDomElements({
-            tag: 'select',
-            attr: {name: field.name},
-            children: field.items.map(item => ({
+        return el('select', {name: field.name})(
+            field.items.map(item => ({
                     tag: 'option',
                     attr: {value: item.value},
                     children: item.name
                 })
             )
-        });
+        );
     }
 
     getCheckboxInput(field) {
@@ -66,7 +64,7 @@ export const CreateForm = framework.component({
 
         return el('div', 'class=checkbox-container')(
             reduce(field.items, (acc, item) => {
-                const id = `${field.name}-${item.name}`.replaceAll(' ','_');
+                const id = `${field.name}-${item.name}`.replaceAll(' ', '_');
 
                 acc.push(
                     el('input', {
@@ -95,8 +93,7 @@ export const CreateForm = framework.component({
     }
 
     getSubmitButton() {
-        return creatDomElements({
-            tag: 'button',
+        return el('button')({
             children: this.props.submit.text || CreateForm.DEFAULT_SUBMIT_TEXT,
             onClick: (event) => {
                 event.preventDefault();
@@ -147,19 +144,17 @@ export const CreateForm = framework.component({
     }
 
     render() {
-        return [
-            creatDomElements({
-                tag: 'form',
-                event: {
-                    name: 'change',
-                    callback: this.onFormChange.bind(this)
-                },
-                children: [
-                    ...this.getFields(),
-                    this.getSubmitButton()
-                ]
-            })
-        ];
+        return el('form')({
+            event: {
+                name: 'change',
+                callback: this.onFormChange.bind(this)
+            },
+            children: [
+                ...this.getFields(),
+                this.getSubmitButton()
+            ]
+        })
+
     }
 })
 
