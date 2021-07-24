@@ -29,7 +29,7 @@ const App = framework.component({
     };
 
     Routes(props.host, {
-        props: {routes: routes}
+        props: {routes}
     });
 });
 

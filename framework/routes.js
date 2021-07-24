@@ -7,8 +7,8 @@ export const Routes = framework.component({
 }, class Routes {
 
     constructor(RouteService, Broadcast, props) {
-        this.routeService = RouteService;
         this.props = props;
+        RouteService.setRoutes(props.routes);
 
         Broadcast.on('routeChange', this.routeChange.bind(this));
     }
@@ -23,10 +23,8 @@ export const Routes = framework.component({
         const hash = window.location.hash.substr(1);
 
         if (routes[hash]) {
-            this.routeService.addHistory(hash);
             this.loadComponent(routes[hash])
         } else {
-            this.routeService.addHistory('/');
             this.loadComponent(routes['/'])
         }
     }

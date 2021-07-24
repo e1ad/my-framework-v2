@@ -7,29 +7,35 @@ export const RouteService = framework.service({
     injected: ['Broadcast'],
     singleton: true
 }, function (Broadcast) {
-    
-    createEventListener(window, 'DOMContentLoaded', routeChange);
-    createEventListener(window, 'hashchange', routeChange);
-
-    function routeChange(event) {
-        Broadcast.broadcast('routeChange', event);
-    }
 
     const _self = this;
 
     const history = [];
+    const HOME_ROUTE = '/';
+    let routes;
 
-    const last = () => history[history.length - 2];
+    createEventListener(window, 'DOMContentLoaded', routeChange);
+    createEventListener(window, 'hashchange', routeChange);
+
+    function routeChange(event) {
+        const hash = window.location.hash.substr(1);
+        const routeHash = routes[hash] ? hash : HOME_ROUTE;
+        addHistory(routeHash);
+        Broadcast.broadcast('routeChange', event);
+    }
+
+    const gePrevious = () => history[history.length - 2] || HOME_ROUTE;
+    const getLast = () => history[history.length - 1] || HOME_ROUTE;
 
     _self.goTo = (goToPath) => {
         window.location.hash = `#${goToPath}`;
-
-        if (last() !== goToPath) {
-            _self.addHistory(goToPath);
-        }
     }
 
-    _self.addHistory = (goToPath) => {
+    function addHistory(goToPath) {
+        if (getLast() === goToPath) {
+            return;
+        }
+
         if (history.length > 3) {
             history.splice(history.length - 2);
         }
@@ -38,7 +44,12 @@ export const RouteService = framework.service({
     }
 
     _self.goBack = () => {
-        _self.goTo(last());
+        const previous = gePrevious();
+        previous && _self.goTo(previous);
+    }
+
+    _self.setRoutes = (_routes) => {
+        routes = _routes;
     }
 
 });
