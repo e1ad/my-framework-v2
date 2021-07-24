@@ -26,9 +26,7 @@ export const BroadcastService = framework.service({
             _data[channel] = _data[channel] || [];
             _data[channel].push(cb)
 
-            return function () {
-                return _self.destroy(channel, cb)
-            }
+            return () => _self.destroy(channel, cb);
         }
     }
 
@@ -36,7 +34,7 @@ export const BroadcastService = framework.service({
         const events = _data[channel];
         const index = events && events.indexOf(cb);
 
-        if (events && index > -1) {
+        if (index > -1) {
             events.splice(index, 1);
         }
     }

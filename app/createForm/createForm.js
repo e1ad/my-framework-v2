@@ -15,9 +15,6 @@ export const CreateForm = framework.component({
     name: 'CreateForm',
     injected: [],
 }, class CreateForm {
-    static DEFAULT_SUBMIT_TEXT = 'Save';
-    static ERROR_CONTAINER_CLASS = 'error-container';
-
     _errorsRef = {}
     _values = {};
 
@@ -32,7 +29,6 @@ export const CreateForm = framework.component({
                     el('label')(field.label),
                     this.getInputByType(field),
                     ErrorContainer({
-                        attr: `class=${CreateForm.ERROR_CONTAINER_CLASS}`,
                         ref: (el) => this._errorsRef[field.name] = el,
                     })
                 ]
@@ -94,7 +90,7 @@ export const CreateForm = framework.component({
 
     getSubmitButton() {
         return el('button')({
-            children: this.props.submit.text || CreateForm.DEFAULT_SUBMIT_TEXT,
+            children: this.props.submit.text || 'Save',
             onClick: (event) => {
                 event.preventDefault();
                 this.props.submit.onClick(this._values);
@@ -153,19 +149,17 @@ export const CreateForm = framework.component({
                 ...this.getFields(),
                 this.getSubmitButton()
             ]
-        })
+        });
 
     }
 })
 
 
+const getValidatorValue = (isError, errorCode) => {
+    return isError ? {[errorCode]: ERROR_MESSAGE[errorCode]} : null;
+};
+
 export const validator = {
-    required: (field, values) => {
-        return isNil(values[field.name]) ? {[ERROR_CODE.REQUIRED]: ERROR_MESSAGE[ERROR_CODE.REQUIRED]} : null;
-    },
-    minNumber: (min) => {
-        return (field, values) => {
-            return isNumber(values[field.name]) && values[field.name] > min ? null : {[ERROR_CODE.MIN_NUMBER]: ERROR_MESSAGE[ERROR_CODE.MIN_NUMBER]}
-        }
-    }
+    required: (field, values) => getValidatorValue(isNil(values[field.name]), ERROR_CODE.REQUIRED),
+    minNumber: (min) => (field, values) => getValidatorValue(!(isNumber(values[field.name]) && values[field.name] > min), ERROR_CODE.MIN_NUMBER)
 };

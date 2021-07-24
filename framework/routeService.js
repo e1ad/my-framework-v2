@@ -20,7 +20,7 @@ export const RouteService = framework.service({
     function routeChange(event) {
         const hash = window.location.hash.substr(1);
         const routeHash = routes[hash] ? hash : HOME_ROUTE;
-        addHistory(routeHash);
+        addToHistory(routeHash);
         Broadcast.broadcast('routeChange', event);
     }
 
@@ -31,7 +31,7 @@ export const RouteService = framework.service({
         window.location.hash = `#${goToPath}`;
     }
 
-    function addHistory(goToPath) {
+    function addToHistory(goToPath) {
         if (getLast() === goToPath) {
             return;
         }
