@@ -37,7 +37,7 @@ export const Menu = framework.component({
             onClick: this.onToggle.bind(this)
         });
 
-        const {height, top, left} = this.triggerButton.getBoundingClientRect();
+        const {left, top, height} = this.buttonPosition;
 
         styleElement(this.ul, {
             left: `${left}px`,
@@ -46,7 +46,7 @@ export const Menu = framework.component({
     }
 
     onDomReady() {
-        this.onRendered();
+        this.buttonPosition = this.triggerButton.getBoundingClientRect();
     }
 
     onToggle() {

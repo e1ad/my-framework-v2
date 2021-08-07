@@ -10,11 +10,10 @@ const StyleGoBackButton = style('button', `
 export const GoBackButton = framework.component({
     name: 'GoBackButton',
     injected: ['RouteService']
-}, function (RouteService, props) {
-
-    props.host.addEventListener('click', RouteService.goBack);
+}, function (RouteService) {
+    this.routeService = RouteService;
 
     this.render = () => {
-        return StyleGoBackButton({children: 'Go Back'});
+        return StyleGoBackButton({children: 'Go Back', onClick: this.routeService.goBack});
     }
 })
