@@ -88,7 +88,7 @@ function Framework() {
             } else if (newNode.nodeName === oldNode.nodeName) {
                 attributeUpdate(oldNode, oldNode.attributes, newNode.attributes);
                 textUpdate(oldNode, newNode);
-                nodesUpdate(newNode.parent, oldNode.children, newNode.children);
+                nodesUpdate(oldNode, oldNode.children, newNode.children);
             } else {
                 oldNode.replaceWith(newNode);
             }

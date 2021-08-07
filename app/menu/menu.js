@@ -16,7 +16,13 @@ export const Menu = framework.component({
     }
 
     getMenuList() {
+        const {left, top, height} = this.buttonPosition;
+
         return MenuListContainer({
+            style:{
+                left: `${left}px`,
+                top: `${height + top + 2}px`,
+            },
             ref: (ul) => this.ul = ul,
             children: map(this.props.items, (item) => MenuItem({
                 children: item.name,
@@ -35,13 +41,6 @@ export const Menu = framework.component({
         this.destroyClickOutside = clickOutside(this.ul, {
             whitelist: [this.triggerButton],
             onClick: this.onToggle.bind(this)
-        });
-
-        const {left, top, height} = this.buttonPosition;
-
-        styleElement(this.ul, {
-            left: `${left}px`,
-            top: `${height + top + 2}px`,
         });
     }
 

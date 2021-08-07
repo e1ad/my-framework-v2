@@ -94,7 +94,7 @@ export const creatDomElements = (item) => {
     const element = isElement(item) ? item : createElement(item.tag, item.attr, children);
 
     if (item.style) {
-        styleElement(item, item.style);
+        styleElement(element, item.style);
     }
 
     if (isFunction(item.onClick)) {
