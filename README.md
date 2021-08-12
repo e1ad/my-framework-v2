@@ -64,3 +64,30 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 ```
 
+**Dom change detection**
+
+Only the changed changed element will be rerender
+```js 
+export const DomUpdate = framework.component({
+    name: 'DomUpdate',
+    injected: [],
+}, class DomUpdate {
+    counter = 0;
+    interval;
+
+    constructor() {
+        this.interval = setInterval(() => {
+            this.counter++;
+            this.forceUpdate();
+        }, 1000);
+    }
+
+    onDestroy() {
+        clearInterval(this.interval);
+    }
+
+    render() {
+        return el('div')(`counter = ${this.counter}`);
+    };
+})
+```
