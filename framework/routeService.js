@@ -24,7 +24,7 @@ export const RouteService = framework.service({
         Broadcast.broadcast('routeChange', event);
     }
 
-    const gePrevious = () => history[history.length - 2] || HOME_ROUTE;
+    const getPrevious = () => history[history.length - 2] || HOME_ROUTE;
     const getLast = () => history[history.length - 1] || HOME_ROUTE;
 
     _self.goTo = (goToPath) => {
@@ -44,7 +44,7 @@ export const RouteService = framework.service({
     }
 
     _self.goBack = () => {
-        const previous = gePrevious();
+        const previous = getPrevious();
         previous && _self.goTo(previous);
     }
 

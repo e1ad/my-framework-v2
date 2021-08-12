@@ -2,7 +2,7 @@ import {framework} from '../../framework/framework.js';
 import {Menu} from '../menu/menu.js';
 import {CreateForm, validator} from '../createForm/createForm.js';
 import {component, el} from '../../framework/dom.js';
-import {GoBackButton} from '../goBack/goBack.js';
+import {GoBackButton} from '../go-back/go-back.js';
 
 export const Demo = framework.component({
     name: 'Demo',

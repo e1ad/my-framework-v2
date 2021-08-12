@@ -5,6 +5,7 @@ import {Home} from './home/home.js';
 import {Routes} from '../framework/routes.js';
 import {About} from './about/about.js';
 import {Demo} from './demo/demo.js';
+import {DomUpdate} from './dom-update/dom-update.js';
 
 framework.start();
 
@@ -25,6 +26,10 @@ const App = framework.component({
         '/demo': {
             name: 'about',
             component: Demo
+        },
+        '/dom-update': {
+            name: 'dom-update',
+            component: DomUpdate
         }
     };
 

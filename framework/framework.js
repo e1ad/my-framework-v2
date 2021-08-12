@@ -1,4 +1,4 @@
-import {castArray, isElement, isFunction, map, some} from './commons.js';
+import {castArray, createEventListener, isElement, isFunction, map, some} from './commons.js';
 
 function Framework() {
 
@@ -42,6 +42,12 @@ function Framework() {
             });
 
             observer.observe(props.host.parentNode, {childList: true});
+
+            const hashChangeDestroyer = createEventListener(window, 'hashchange', () => {
+                dependency.onDestroy();
+                observer.disconnect();
+                hashChangeDestroyer();
+            });
         }
 
         isFunction(dependency.onDomReady) && dependency.onDomReady();
