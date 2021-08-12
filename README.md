@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 **Dom change detection**
 
-Only the changed changed element will be rerender
+Only the changed element will be rerender
 ```js 
 export const DomUpdate = framework.component({
     name: 'DomUpdate',
