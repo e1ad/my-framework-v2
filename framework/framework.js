@@ -116,8 +116,7 @@ function Framework() {
 
             dependency.forceUpdate = () => {
                 const children = castArray(dependency.render()).filter(isElement);
-                !isFirst && nodesUpdate(props.host, props.host.children, children);
-                isFirst && props.host.replaceChildren(...children);
+                isFirst ? props.host.replaceChildren(...children) : nodesUpdate(props.host, props.host.children, children);
                 isFirst = false;
                 isFunction(dependency.onRendered) && dependency.onRendered({isFirst});
             }

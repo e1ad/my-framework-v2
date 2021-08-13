@@ -11,9 +11,8 @@ export const GoBackButton = framework.component({
     name: 'GoBackButton',
     injected: ['RouteService']
 }, function (RouteService) {
-    this.routeService = RouteService;
 
     this.render = () => {
-        return StyleGoBackButton({children: 'Go Back', onClick: this.routeService.goBack});
+        return StyleGoBackButton({children: 'Go Back', onClick: RouteService.goBack});
     }
 })

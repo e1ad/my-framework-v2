@@ -21,12 +21,8 @@ export const Routes = framework.component({
         const {routes} = this.props;
 
         const hash = window.location.hash.substr(1);
-
-        if (routes[hash]) {
-            this.loadComponent(routes[hash])
-        } else {
-            this.loadComponent(routes['/'])
-        }
+        const route = routes[hash] ? routes[hash] : routes['/']
+        this.loadComponent(route)
     }
 
 });
