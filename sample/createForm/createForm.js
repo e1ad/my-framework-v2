@@ -105,19 +105,20 @@ export const CreateForm = framework.component({
         }, {});
     }
 
-    getErrorMessage(error, errorCode) {
-        return (error && error[errorCode]) || '';
+    getErrorInfo(field){
+        const error = this.getFieldErrors(field);
+        return reduce([ERROR_CODE.REQUIRED, ERROR_CODE.MIN_NUMBER], (acc, errorCode)=> {
+            const message = (error && error[errorCode]) || ''
+            acc.isValid = acc.isValid || message;
+            acc.message += message;
+            return acc;
+        },{ isValid : false, message:'' });
     }
 
     handleError(field, input) {
-        const error = this.getFieldErrors(field);
-
-        const isRequired = this.getErrorMessage(error, ERROR_CODE.REQUIRED);
-        const isMin = this.getErrorMessage(error, ERROR_CODE.MIN_NUMBER);
-
-        this._errorsRef[field.name].innerText = isRequired + isMin;
-
-        styleElement(input, {border: `solid 1px ${isRequired || isMin ? 'red' : 'black'}`})
+        const {isValid, message} = this.getErrorInfo(field);
+        this._errorsRef[field.name].innerText = message;
+        styleElement(input, {border: `solid 1px ${isValid ? 'red' : 'black'}`})
     }
 
     getValueByType(field, input) {
@@ -150,7 +151,6 @@ export const CreateForm = framework.component({
                 this.getSubmitButton()
             ]
         });
-
     }
 })
 

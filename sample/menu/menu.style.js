@@ -26,7 +26,6 @@ export const MenuItem = style('li', `
   }
 `);
 
-
 export const TriggerButton = style('button', `
 :host{
   height:24px;

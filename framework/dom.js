@@ -19,7 +19,6 @@ export const createElement = (tag, attributes = {}, children) => {
     return element;
 };
 
-
 const appendChild = (child, element) => {
     if (isElement(child)) {
         element.appendChild(child);
@@ -36,7 +35,6 @@ export const el = (tag, attr) => {
     };
 };
 
-
 const getAttributes = (attributes) => {
     if (isString(attributes)) {
         return reduce(attributes.split(','), (acc, item) => {
@@ -52,7 +50,6 @@ const getAttributes = (attributes) => {
 
     return attributes
 };
-
 
 export const style = (tag, _style) => {
 
@@ -87,7 +84,6 @@ export const styleElement = (element, style) => {
     return element;
 };
 
-
 export const creatDomElements = (item) => {
     const children = Array.isArray(item.children) ? item.children.map(creatDomElements) : item.children;
 
@@ -111,7 +107,6 @@ export const creatDomElements = (item) => {
 
     return element;
 };
-
 
 export const component = (_component, args = {}) => {
     return (props) => {
