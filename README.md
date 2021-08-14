@@ -72,13 +72,15 @@ export const DomUpdate = framework.component({
     name: 'DomUpdate',
     injected: [],
 }, class DomUpdate {
-    counter = 0;
     interval;
+    
+    state = {
+        counter: 0
+    }
 
     constructor() {
         this.interval = setInterval(() => {
-            this.counter++;
-            this.forceUpdate();
+            this.setState({counter: this.state.counter + 1})
         }, 1000);
     }
 
@@ -87,7 +89,7 @@ export const DomUpdate = framework.component({
     }
 
     render() {
-        return el('div')(`counter = ${this.counter}`);
+        return el('div')(`counter = ${this.state.counter}`);
     };
 })
 ```

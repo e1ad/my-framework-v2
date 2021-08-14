@@ -1,4 +1,4 @@
-import {castArray, createEventListener, isElement, isFunction, map, some} from './commons.js';
+import {castArray, createEventListener, forEach, isElement, isFunction, map, some} from './commons.js';
 
 function Framework() {
 
@@ -119,6 +119,20 @@ function Framework() {
                 isFirst ? props.host.replaceChildren(...children) : nodesUpdate(props.host, props.host.children, children);
                 isFirst = false;
                 isFunction(dependency.onRendered) && dependency.onRendered({isFirst});
+            }
+
+            dependency.setState = (newState) => {
+                dependency.state = dependency.state || {};
+                let stateHasChanged = false;
+
+                forEach(newState, (value, key) => {
+                    if (dependency.state[key] !== value) {
+                        dependency.state[key] = value;
+                        stateHasChanged = true;
+                    }
+                });
+
+                stateHasChanged && dependency.forceUpdate();
             }
 
             dependency.forceUpdate();

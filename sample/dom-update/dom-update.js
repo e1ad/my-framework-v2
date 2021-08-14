@@ -6,11 +6,12 @@ export const DomUpdate = framework.component({
     name: 'DomUpdate',
     injected: [],
 }, class DomUpdate{
-    counter = 0;
+    state = {
+        counter: 0
+    }
 
     onAddClick(add){
-        this.counter = this.counter + add;
-        this.forceUpdate();
+        this.setState({ counter: this.state.counter + add })
     }
 
     render() {
@@ -25,7 +26,7 @@ export const DomUpdate = framework.component({
                       children: '-',
                       onClick: () => this.onAddClick(-1)
                   }),
-                  el('div')(this.counter),
+                  el('div')(this.state.counter),
                   el('button')({
                       children: '+',
                       onClick: () => this.onAddClick(1)

@@ -12,6 +12,7 @@ export const Demo = framework.component({
     menuProps = {
         trigger: 'Hello world',
         closeOnSelect: true,
+        initOpen: false,
         onToggle: (isOpen) => {
             console.log(`is ${isOpen ? 'open' : 'close'}`);
         },

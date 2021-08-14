@@ -8,18 +8,19 @@ export const Menu = framework.component({
     injected: []
 }, class Menu {
     destroyClickOutside = noop;
-    isMenuOpen = false;
+    state = {
+        isMenuOpen: false,
+    }
 
     constructor(props) {
         this.props = props;
-        this.isMenuOpen = props.initOpen;
     }
 
     getMenuList() {
         const {left, top, height} = this.buttonPosition;
 
         return MenuListContainer({
-            style:{
+            style: {
                 left: `${left}px`,
                 top: `${height + top + 2}px`,
             },
@@ -46,16 +47,15 @@ export const Menu = framework.component({
 
     onDomReady() {
         this.buttonPosition = this.triggerButton.getBoundingClientRect();
+        this.setState({ isMenuOpen: this.props.initOpen });
     }
 
     onToggle() {
         this.ul = null;
 
-        this.isMenuOpen = !this.isMenuOpen;
+        this.setState({ isMenuOpen: !this.state.isMenuOpen});
 
-        this.forceUpdate();
-
-        this.props.onToggle && this.props.onToggle(this.isMenuOpen);
+        this.props.onToggle && this.props.onToggle(this.state.isMenuOpen);
     }
 
     onItemClick(item, event) {
@@ -75,7 +75,8 @@ export const Menu = framework.component({
                 onClick: this.onToggle.bind(this),
                 ref: (el) => this.triggerButton = el
             }),
-            this.isMenuOpen && this.getMenuList()
+
+            this.state.isMenuOpen && this.getMenuList()
         ];
     }
 })
