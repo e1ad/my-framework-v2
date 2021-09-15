@@ -19,7 +19,6 @@ export const CreateForm = framework.component({
     _values = {};
 
     constructor(props) {
-        this.props = props;
         props.host.classList.add('create-from-container');
     }
 

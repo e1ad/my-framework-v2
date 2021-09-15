@@ -114,6 +114,8 @@ function Framework() {
         if (isFunction(dependency.render)) {
             let isFirst = true;
 
+            dependency.props = props;
+
             dependency.forceUpdate = () => {
                 const children = castArray(dependency.render()).filter(isElement);
                 isFirst ? props.host.replaceChildren(...children) : nodesUpdate(props.host, props.host.children, children);

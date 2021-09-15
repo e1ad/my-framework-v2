@@ -12,18 +12,8 @@ export const Menu = framework.component({
         isMenuOpen: false,
     }
 
-    constructor(props) {
-        this.props = props;
-    }
-
     getMenuList() {
-        const {left, top, height} = this.buttonPosition;
-
         return MenuListContainer({
-            style: {
-                left: `${left}px`,
-                top: `${height + top + 2}px`,
-            },
             ref: (ul) => this.ul = ul,
             children: map(this.props.items, (item) => MenuItem({
                 children: item.name,
@@ -37,6 +27,8 @@ export const Menu = framework.component({
             return
         }
 
+        this.setListPosition();
+
         this.destroyClickOutside();
 
         this.destroyClickOutside = clickOutside(this.ul, {
@@ -45,9 +37,21 @@ export const Menu = framework.component({
         });
     }
 
+    setListPosition(){
+        const {left, top, height} = this.buttonPosition;
+
+        styleElement(this.ul, {
+            left: `${left}px`,
+            top: `${height + top + 2}px`,
+        })
+    }
+
     onDomReady() {
         this.buttonPosition = this.triggerButton.getBoundingClientRect();
-        this.setState({ isMenuOpen: this.props.initOpen });
+
+       this.setState({ isMenuOpen: this.props.initOpen });
+
+        this.ul && this.setListPosition();
     }
 
     onToggle() {
