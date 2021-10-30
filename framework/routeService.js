@@ -21,7 +21,7 @@ export const RouteService = framework.service({
         const hash = window.location.hash.substr(1);
         const routeHash = routes[hash] ? hash : HOME_ROUTE;
         addToHistory(routeHash);
-        Broadcast.broadcast('routeChange', event);
+        Broadcast.emit('routeChange', event);
     }
 
     const getPrevious = () => history[history.length - 2] || HOME_ROUTE;

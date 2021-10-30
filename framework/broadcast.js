@@ -11,7 +11,7 @@ export const BroadcastService = framework.service({
 
     const _data = {};
 
-    _self.broadcast = (channel, info) => {
+    _self.emit = (channel, info) => {
         const events = _data[channel];
 
         if (events) {
