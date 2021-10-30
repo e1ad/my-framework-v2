@@ -1,8 +1,11 @@
-import {castArray, createEventListener, forEach, isElement, isFunction, map, some} from './commons.js';
+import {createEventListener, isElement, isFunction, map, some} from './commons.js';
+import {onRender} from './framework.util.js';
 
 function Framework() {
 
     const _self = this;
+
+    const COMPONENT_NAME_ATTRIBUTE = 'component-name';
     const dependencies = {};
 
     function getInjectedItem(item) {
@@ -53,102 +56,15 @@ function Framework() {
         isFunction(dependency.onDomReady) && dependency.onDomReady();
     }
 
-    function attributeUpdate(oldNode, oldAttributes, newAttributes) {
-        for (let i = 0; i < newAttributes.length; i++) {
-            const newAttr = newAttributes[i];
-            const oldAttr = oldAttributes.getNamedItem(newAttr.name);
-
-            if (!oldAttr || oldAttr.value !== newAttr.value) {
-                oldNode.setAttribute(newAttr.name, newAttr.value);
-            }
-        }
-
-        for (let i = 0; i < oldAttributes.length; i++) {
-            const oldAttr = oldAttributes[i];
-            const newAttr = newAttributes.getNamedItem(oldAttr.name);
-
-            if (!newAttr) {
-                oldNode.removeAttribute(oldAttr.name);
-            }
-        }
-    }
-
-    function textUpdate(oldNode, newNode) {
-        // nodeType 3 is a text node : https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
-        if (!newNode.children.length && newNode?.childNodes[0]?.nodeType === 3 && oldNode.innerText !== newNode.innerText) {
-            oldNode.innerText = newNode.innerText;
-        }
-    }
-
-    function nodesUpdate(parent, oldNodes, newNodes) {
-        for (let i = 0; i < newNodes.length; i++) {
-            const newNode = newNodes[i];
-            const oldNode = oldNodes[i];
-
-            if (oldNode?.isEqualNode(newNode)) {
-                continue;
-            }
-
-            if (!oldNode) {
-                parent.appendChild(newNode);
-            } else if (newNode.nodeName === oldNode.nodeName) {
-                attributeUpdate(oldNode, oldNode.attributes, newNode.attributes);
-                textUpdate(oldNode, newNode);
-                nodesUpdate(oldNode, oldNode.children, newNode.children);
-            } else {
-                oldNode.replaceWith(newNode);
-            }
-        }
-
-        for (let i = 0; i < oldNodes.length; i++) {
-            const newNode = newNodes[i];
-            const oldNode = oldNodes[i];
-
-            if (!newNode) {
-                oldNode.remove();
-            }
-        }
-    }
-
-    function onRender(dependency, props) {
-        if (isFunction(dependency.render)) {
-            let isFirst = true;
-
-            dependency.props = props;
-
-            dependency.forceUpdate = () => {
-                const children = castArray(dependency.render()).filter(isElement);
-                isFirst ? props.host.replaceChildren(...children) : nodesUpdate(props.host, props.host.children, children);
-                isFirst = false;
-                isFunction(dependency.onRendered) && dependency.onRendered({isFirst});
-            }
-
-            dependency.setState = (newState) => {
-                dependency.state = dependency.state || {};
-                let stateHasChanged = false;
-
-                forEach(newState, (value, key) => {
-                    if (dependency.state[key] !== value) {
-                        dependency.state[key] = value;
-                        stateHasChanged = true;
-                    }
-                });
-
-                stateHasChanged && dependency.forceUpdate();
-            }
-
-            dependency.forceUpdate();
-        }
-    }
-
     _self.component = ({name, injected}, dependency) => {
         return (host, {props} = {}) => {
-            return getComponent({host, props, dependency, injected});
+            return getComponent({name,host, props, dependency, injected});
         }
     }
 
-    function getComponent({host, props = {}, dependency, injected}) {
+    function getComponent({name, host, props = {}, dependency, injected}) {
         props.host = isElement(host) ? host : document.querySelector(host);
+        props.host.setAttribute(COMPONENT_NAME_ATTRIBUTE, name);
         const _dependency = new dependency(...getInjectedItem({injected}), props);
         onRender(_dependency, props);
 
