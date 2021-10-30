@@ -1,4 +1,4 @@
-import {castArray, forEach, isElement, isFunction} from "./commons.js";
+import {castArray, forEach, isElement, isFunction} from './commons.js';
 
 export function attributeUpdate(oldNode, oldAttributes, newAttributes){
     for (let i = 0; i < newAttributes.length; i++) {
