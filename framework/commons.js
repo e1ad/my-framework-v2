@@ -1,16 +1,22 @@
 export const castArray = (value) => Array.isArray(value) ? value : [value];
 
-export const isPrimitive = (value) => isString(value) || isNumber(value);
+export const isPrimitive = (value) => isString(value) || isNumber(value) || isBoolean(value);
 
 export const isFunction = (value) => typeof (value) === 'function';
 
 export const isString = (value) => typeof (value) === 'string';
+
+export const isBoolean = (value) => typeof (value) === 'boolean';
 
 export const isNumber = (value) => typeof (value) === 'number' && !isNaN(value);
 
 export const isElement = (value) => value instanceof Element;
 
 export const isPlainObject = (value) => value && typeof (value) === 'object' && !Array.isArray(value);
+
+export const isNil = (value) => [undefined, null, ''].includes(value);
+
+export const selectElement = (element) => isElement(element) ? element : document.querySelector(element);
 
 export const createEventListener = (element, event, callback) => {
     element.addEventListener(event, callback, false);
@@ -60,14 +66,12 @@ export const reduce = (array, callback, initialValue) => {
     return initialValue;
 };
 
-export const isNil = (value) => [undefined, null, ''].includes(value);
-
 export const clickOutside = (element, {whitelist, onClick}) => {
 
-    const whitelistedElements = map(whitelist, (i) => isElement(i) ? i : document.querySelector(i));
+    const whitelistedElements = map(whitelist, selectElement);
 
     const destroyClickOutside = createEventListener(document, 'click', (event) => {
-        if (!element.contains(event.target) && !whitelistedElements.some(el => event.target.isEqualNode(el))) {
+        if (!element.contains(event.target) && !whitelistedElements.some((el) => event.target.isEqualNode(el))) {
             onClick();
             destroyClickOutside();
         }

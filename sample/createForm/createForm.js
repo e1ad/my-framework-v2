@@ -5,7 +5,7 @@ import {
     isNumber,
     map
 } from '../../framework/commons.js';
-import {createElement, creatDomElements, styleElement} from '../../framework/dom.js'
+import {styleElement} from '../../framework/dom.js'
 import {ERROR_MESSAGE, ERROR_CODE} from './form.const.js';
 import {ErrorContainer, FieldContainer} from './createForm.style.js';
 import {framework} from '../../framework/framework.js';
@@ -131,7 +131,7 @@ export const CreateForm = framework.component({
         }
     }
 
-    onFormChange(event) {
+    onFormChange = (event) => {
         const input = event.target;
         const name = input.attributes.name.value;
         const field = find(this.props.fields, field => field.name === name);
@@ -143,7 +143,7 @@ export const CreateForm = framework.component({
         return el('form')({
             event: {
                 name: 'change',
-                callback: this.onFormChange.bind(this)
+                callback: this.onFormChange
             },
             children: [
                 ...this.getFields(),

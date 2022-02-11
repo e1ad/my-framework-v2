@@ -10,14 +10,14 @@ export const Routes = framework.component({
         this.props = props;
         RouteService.setRoutes(props.routes);
 
-        Broadcast.on('routeChange', this.routeChange.bind(this));
+        Broadcast.on('routeChange', this.routeChange);
     }
 
     loadComponent(route) {
         route.component && route.component(this.props.host);
     }
 
-    routeChange() {
+    routeChange = ()=> {
         const {routes} = this.props;
 
         const hash = window.location.hash.substr(1);

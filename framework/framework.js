@@ -1,4 +1,4 @@
-import {createEventListener, isElement, isFunction, map, some} from './commons.js';
+import {createEventListener, isFunction, map, selectElement, some} from './commons.js';
 import {onRender} from './framework.util.js';
 
 function Framework() {
@@ -58,12 +58,12 @@ function Framework() {
 
     _self.component = ({name, injected}, dependency) => {
         return (host, {props} = {}) => {
-            return getComponent({name,host, props, dependency, injected});
+            return renderComponent({name,host, props, dependency, injected});
         }
     }
 
-    function getComponent({name, host, props = {}, dependency, injected}) {
-        props.host = isElement(host) ? host : document.querySelector(host);
+    function renderComponent({name, host, props = {}, dependency, injected}) {
+        props.host = selectElement(host);
         props.host.setAttribute(COMPONENT_NAME_ATTRIBUTE, name);
         const _dependency = new dependency(...getInjectedItem({injected}), props);
         onRender(_dependency, props);

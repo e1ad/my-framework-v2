@@ -5,16 +5,11 @@ export const createElement = (tag, attributes = {}, children) => {
 
     const _attributes = getAttributes(attributes);
 
-    for (let key in _attributes) {
-        if (_attributes.hasOwnProperty(key)) {
-            element.setAttribute(key, _attributes[key]);
-        }
-    }
+    forEach(_attributes, (value, key) =>{
+        element.setAttribute(key, value);
+    });
 
-    forEach(
-        castArray(children),
-        child => appendChild(child, element)
-    );
+    forEach(castArray(children), child => appendChild(child, element));
 
     return element;
 };

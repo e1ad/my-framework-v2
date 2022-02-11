@@ -17,7 +17,7 @@ export const BroadcastService = framework.service({
         if (events) {
             forEach(events, event => {
                 event(info);
-            })
+            });
         }
     }
 
