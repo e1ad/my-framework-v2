@@ -18,11 +18,11 @@ export const isNil = (value) => [undefined, null, ''].includes(value);
 
 export const selectElement = (element) => isElement(element) ? element : document.querySelector(element);
 
-export const createEventListener = (element, event, callback) => {
-    element.addEventListener(event, callback, false);
+export const createEventListener = (element, event, callback, options = false) => {
+    element.addEventListener(event, callback, options);
 
     return () => {
-        element.removeEventListener(event, callback, false);
+        element.removeEventListener(event, callback, options);
     };
 };
 

@@ -1,4 +1,4 @@
-import {createEventListener, isFunction, map, selectElement, some} from './commons.js';
+import {createEventListener, forEach, isFunction, map, selectElement, some} from './commons.js';
 import {onRender} from './framework.util.js';
 
 function Framework() {
@@ -76,10 +76,9 @@ function Framework() {
     }
 
     _self.start = () => {
-        for (let name in dependencies) {
-            const item = dependencies[name];
+        forEach(dependencies, (item) => {
             !item.singleton && new item.dependency(...getInjectedItem(item));
-        }
+        });
     }
 }
 

@@ -2,14 +2,19 @@ import {castArray, forEach, isElement, isFunction, isPlainObject, isPrimitive, i
 
 export const createElement = (tag, attributes = {}, children) => {
     const element = document.createElement(tag);
+    const fragment = document.createDocumentFragment();
 
     const _attributes = getAttributes(attributes);
 
-    forEach(_attributes, (value, key) =>{
+    forEach(_attributes, (value, key) => {
         element.setAttribute(key, value);
     });
 
-    forEach(castArray(children), child => appendChild(child, element));
+    forEach(castArray(children), (child) => {
+        appendChild(child, fragment);
+    });
+
+    element.appendChild(fragment);
 
     return element;
 };
@@ -70,12 +75,10 @@ export const style = (tag, _style) => {
 };
 
 export const styleElement = (element, style) => {
-    for (let key in style) {
-        if (style.hasOwnProperty(key)) {
-            element.style[key] = style[key];
-        }
-    }
-
+    forEach(style, (value, key)=>{
+        element.style[key] = value;
+    });
+   
     return element;
 };
 
