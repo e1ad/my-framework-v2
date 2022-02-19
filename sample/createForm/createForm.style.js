@@ -1,5 +1,13 @@
 import {style} from '../../framework/dom.js';
 
+
+export const CreatFormWrapper = style('form',`
+    :host{
+        display: inline-flex;
+        flex-direction: column;
+    }
+`);
+
 export const FieldContainer = style('div', `
     :host {
         display: flex;

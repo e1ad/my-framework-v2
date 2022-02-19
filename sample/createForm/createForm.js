@@ -7,7 +7,7 @@ import {
 } from '../../framework/commons.js';
 import {styleElement} from '../../framework/dom.js'
 import {ERROR_MESSAGE, ERROR_CODE} from './form.const.js';
-import {ErrorContainer, FieldContainer} from './createForm.style.js';
+import {CreatFormWrapper, ErrorContainer, FieldContainer} from './createForm.style.js';
 import {framework} from '../../framework/framework.js';
 import {el} from '../../framework/dom.js';
 
@@ -17,10 +17,6 @@ export const CreateForm = framework.component({
 }, class CreateForm {
     _errorsRef = {}
     _values = {};
-
-    constructor(props) {
-        props.host.classList.add('create-from-container');
-    }
 
     getFields() {
         return map(this.props.fields, (field) => FieldContainer({
@@ -140,7 +136,7 @@ export const CreateForm = framework.component({
     }
 
     render() {
-        return el('form')({
+        return CreatFormWrapper({
             event: {
                 name: 'change',
                 callback: this.onFormChange
