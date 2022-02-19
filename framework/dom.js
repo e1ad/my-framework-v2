@@ -54,17 +54,16 @@ const getAttributes = (attributes) => {
 export const style = (tag, _style) => {
 
     const head = document.querySelector('head');
-    const className = `className_${Math.floor(Math.random() * 1000) + 1}`;
-    const styleText = (isFunction(_style) ? _style() : _style).replaceAll(':host', `.${className}`);
+    const styleAttribute = 'data-style';
+    const uniqId = `style_${Math.floor(Math.random() * 1000) + 1}`;
+    const styleText = (isFunction(_style) ? _style() : _style).replaceAll(':host', `[${styleAttribute}="${uniqId}"]`);
 
     head.append(createElement('style', null, styleText));
 
     return ({children, attr = {}, ref, event, onClick, style}) => {
-        const fullClassName = `${className} ${attr.class || ''}`;
-
         return creatDomElements({
             tag,
-            attr: isString(attr) ? `${attr}, class=${fullClassName}` : {...attr, class: fullClassName},
+            attr: isString(attr) ? `${attr}, ${styleAttribute}=${uniqId}` : {...attr, [styleAttribute]: uniqId},
             ref,
             event,
             onClick,
