@@ -80,7 +80,7 @@ export const styleElement = (element, style) => {
 
 export const creatDomElements = (item) => {
     if(!item){
-        return ;
+        return;
     }
 
     const children = Array.isArray(item.children) ? item.children.map(creatDomElements) : item.children;
