@@ -51,24 +51,21 @@ const getAttributes = (attributes) => {
     return attributes
 };
 
-export const style = (tag, _style) => {
+let counter = 0;
 
+export const style = (tag, style) => {
     const head = document.querySelector('head');
     const styleAttribute = 'data-style';
-    const uniqId = `style_${Math.floor(Math.random() * 1000) + 1}`;
-    const styleText = (isFunction(_style) ? _style() : _style).replaceAll(':host', `[${styleAttribute}="${uniqId}"]`);
+    const uniqId = `style_${counter = counter + 1}`;
+    const styleText = (isFunction(style) ? style() : style).replaceAll(':host', `[${styleAttribute}="${uniqId}"]`);
 
     head.append(createElement('style', null, styleText));
 
-    return ({children, attr = {}, ref, event, onClick, style}) => {
+    return ({ attr = {}, ...args}) => {
         return creatDomElements({
             tag,
             attr: isString(attr) ? `${attr}, ${styleAttribute}=${uniqId}` : {...attr, [styleAttribute]: uniqId},
-            ref,
-            event,
-            onClick,
-            style,
-            children
+            ...args
         });
     };
 };
@@ -82,6 +79,10 @@ export const styleElement = (element, style) => {
 };
 
 export const creatDomElements = (item) => {
+    if(!item){
+        return ;
+    }
+
     const children = Array.isArray(item.children) ? item.children.map(creatDomElements) : item.children;
 
     const element = isElement(item) ? item : createElement(item.tag, item.attr, children);

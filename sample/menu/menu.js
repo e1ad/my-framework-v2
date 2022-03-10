@@ -2,6 +2,7 @@ import {clickOutside, map, noop} from '../../framework/commons.js';
 import {styleElement} from '../../framework/dom.js';
 import {MenuItem, MenuListContainer, TriggerButton} from './menu.style.js';
 import {framework} from '../../framework/framework.js';
+import {getAnalyticsAsAttribute} from '../../framework/analyticsService.js';
 
 export const Menu = framework.component({
     name: 'Menu',
@@ -15,6 +16,7 @@ export const Menu = framework.component({
     getMenuList() {
         return MenuListContainer({
             ref: (ul) => this.ul = ul,
+            attr: getAnalyticsAsAttribute('menu-dropdown'),
             children: map(this.props.items, (item) => MenuItem({
                 children: item.name,
                 onClick: (event) => this.onItemClick(item, event)

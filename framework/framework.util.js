@@ -28,6 +28,8 @@ function textUpdate(oldNode, newNode) {
 }
 
 export function nodesUpdate(parent, oldNodes, newNodes) {
+    const newAddedNodes = [];
+
     for (let i = 0; i < newNodes.length; i++) {
         const newNode = newNodes[i];
         const oldNode = oldNodes[i];
@@ -38,6 +40,7 @@ export function nodesUpdate(parent, oldNodes, newNodes) {
 
         if (!oldNode) {
             parent.appendChild(newNode);
+            newAddedNodes.push(newNode);
         } else if (newNode.nodeName === oldNode.nodeName) {
             attributeUpdate(oldNode, oldNode.attributes, newNode.attributes);
             textUpdate(oldNode, newNode);
@@ -51,7 +54,7 @@ export function nodesUpdate(parent, oldNodes, newNodes) {
         const newNode = newNodes[i];
         const oldNode = oldNodes[i];
 
-        if (!newNode) {
+        if (!newNode && !newAddedNodes.includes(oldNode)) {
             oldNode.remove();
         }
     }
