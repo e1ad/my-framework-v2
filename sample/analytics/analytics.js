@@ -12,11 +12,11 @@ export const Analytics = framework.component({
     }
 
     onDomReady(){
-        AnalyticsService(this.section1, {category: 'section1'}).addEventListener((event )=> {
+        AnalyticsService(this.section1, {category: 'section1'}).addEventListener((event) => {
             console.log(event.detail) ;
         });
 
-        AnalyticsService(this.section2, {category: 'section2'}).addEventListener((event )=> {
+        AnalyticsService(this.section2, {category: 'section2'}).addEventListener((event) => {
             console.log(event.detail) ;
         });
     }

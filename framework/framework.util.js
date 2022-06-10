@@ -22,7 +22,7 @@ export function attributeUpdate(oldNode, oldAttributes, newAttributes){
 
 function textUpdate(oldNode, newNode) {
     // nodeType 3 is a text node : https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
-    if (!newNode.children.length && newNode?.childNodes[0]?.nodeType === 3 && oldNode.innerText !== newNode.innerText) {
+    if (!newNode.children.length && newNode?.childNodes[0]?.nodeType === Node.TEXT_NODE && oldNode.innerText !== newNode.innerText) {
         oldNode.innerText = newNode.innerText;
     }
 }
@@ -69,8 +69,8 @@ export function onRender(dependency, props) {
         dependency.forceUpdate = () => {
             const children = castArray(dependency.render()).filter(isElement);
             isFirst ? props.host.replaceChildren(...children) : nodesUpdate(props.host, props.host.children, children);
-            isFirst = false;
             isFunction(dependency.onRendered) && dependency.onRendered({isFirst});
+            isFirst = false;
         }
 
         dependency.setState = (newState) => {

@@ -17,7 +17,7 @@ export const Routes = framework.component({
         route.component && route.component(this.props.host);
     }
 
-    routeChange = ()=> {
+    routeChange = () => {
         const {routes} = this.props;
 
         const hash = window.location.hash.substr(1);

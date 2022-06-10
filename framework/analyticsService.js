@@ -43,7 +43,7 @@ export function AnalyticsService (target, { category } = {}) {
         return DEFAULT_USER_EVENTS.includes(eventName);
     }
 
-    function addEventListener(callback){
+    function addEventListener(callback) {
         return createEventListener(mainElement,ANALYTICS_CUSTOM_EVENT,callback);
     }
 
@@ -53,13 +53,13 @@ export function AnalyticsService (target, { category } = {}) {
         value && fireEvent(eventName, value, node);
     }
 
-    const findAnalyticsElement = (nodes) => nodes && [...nodes].find(el =>el.getAttribute?.(ANALYTICS_ATTRIBUTE));
+    const findAnalyticsElement = (nodes) => nodes && [...nodes].find(el => el.getAttribute?.(ANALYTICS_ATTRIBUTE));
 
-    function onFindElement(nodes, eventName){
+    function onFindElement(nodes, eventName) {
         shouldFireEvent(findAnalyticsElement(nodes),eventName);
     }
 
-    function onUserEvent(event){
+    function onUserEvent(event) {
         const node = event.target.closest(`[${ANALYTICS_ATTRIBUTE}]`);
         const eventName = event.type;
         if(node && getIsAllowEvent(node, eventName)) {
@@ -83,7 +83,7 @@ export function AnalyticsService (target, { category } = {}) {
 
         observer.observe(mainElement, {
             childList: true,
-            subtree: true,
+            attributes: true,
             attributeFilter: [ANALYTICS_ATTRIBUTE]
         });
 

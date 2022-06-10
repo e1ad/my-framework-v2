@@ -3,8 +3,6 @@ import {onRender} from './framework.util.js';
 
 function Framework() {
 
-    const _self = this;
-
     const COMPONENT_NAME_ATTRIBUTE = 'component-name';
     const dependencies = {};
 
@@ -23,7 +21,7 @@ function Framework() {
         });
     }
 
-    _self.service = ({name, injected, singleton}, dependency) => {
+    function service({name, injected, singleton}, dependency) {
         dependencies[name] = {
             dependency: getDependency({singleton, dependency, injected}, singleton),
             injected,
@@ -56,7 +54,7 @@ function Framework() {
         isFunction(dependency.onDomReady) && dependency.onDomReady();
     }
 
-    _self.component = ({name, injected}, dependency) => {
+    function component({name, injected}, dependency) {
         return (host, {props} = {}) => {
             return renderComponent({name,host, props, dependency, injected});
         }
@@ -75,11 +73,17 @@ function Framework() {
         return _dependency;
     }
 
-    _self.start = () => {
+    function start() {
         forEach(dependencies, (item) => {
             !item.singleton && new item.dependency(...getInjectedItem(item));
         });
     }
+
+    return {
+        service,
+        component,
+        start
+    }
 }
 
-export const framework = new Framework();
+export const framework = Framework();
