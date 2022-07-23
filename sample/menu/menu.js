@@ -61,17 +61,17 @@ export const Menu = framework.component({
 
         this.setState({ isMenuOpen: !this.state.isMenuOpen});
 
-        this.props.onToggle && this.props.onToggle(this.state.isMenuOpen);
+        this.props.onToggle?.(this.state.isMenuOpen);
     }
 
     onItemClick(item, event) {
         this.props.closeOnSelect && this.onToggle();
-        this.props.onSelect && this.props.onSelect(item, event);
+        this.props.onSelect?.(item, event);
     }
 
     onDestroy() {
         this.destroyClickOutside();
-        this.props.onDestroy && this.props.onDestroy();
+         this.props.onDestroy?.();
     }
 
     render() {
