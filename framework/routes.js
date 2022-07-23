@@ -13,16 +13,12 @@ export const Routes = framework.component({
         Broadcast.on('routeChange', this.routeChange);
     }
 
-    loadComponent(route) {
-        route.component && route.component(this.props.host);
-    }
-
     routeChange = () => {
         const {routes} = this.props;
 
         const hash = window.location.hash.substr(1);
         const route = routes[hash] ? routes[hash] : routes['/']
-        this.loadComponent(route)
+        route.component?.(this.props.host);
     }
 
 });

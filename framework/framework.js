@@ -51,7 +51,7 @@ function Framework() {
             });
         }
 
-        isFunction(dependency.onDomReady) && dependency.onDomReady();
+        dependency.onDomReady?.();
     }
 
     function component({name, injected}, dependency) {

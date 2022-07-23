@@ -104,7 +104,7 @@ export const Demo = framework.component({
     render() {
         return el('div')([
             component(GoBackButton)(),
-            component(Menu, {ref: el => this.menu = el})(this.menuProps),
+            component(Menu, { ref: el => this.menu = el })(this.menuProps),
             el('br')(),
             el('div')(
                 el('button')({

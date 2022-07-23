@@ -28,7 +28,7 @@ function textUpdate(oldNode, newNode) {
 }
 
 export function nodesUpdate(parent, oldNodes, newNodes) {
-    const newAddedNodes = [];
+    const addedNodes = [];
     const removedNodes = [];
 
     for (let i = 0; i < newNodes.length ; i++) {
@@ -40,7 +40,7 @@ export function nodesUpdate(parent, oldNodes, newNodes) {
         }
 
         if (!oldNode) {
-            newAddedNodes.push(newNode);
+            addedNodes.push(newNode);
         } else if (newNode.nodeName === oldNode.nodeName) {
             attributeUpdate(oldNode, oldNode.attributes, newNode.attributes);
             textUpdate(oldNode, newNode);
@@ -50,7 +50,7 @@ export function nodesUpdate(parent, oldNodes, newNodes) {
         }
     }
 
-    newAddedNodes.forEach((child) => {
+    forEach(addedNodes,(child) => {
         parent.appendChild(child);
     });
 
@@ -58,12 +58,12 @@ export function nodesUpdate(parent, oldNodes, newNodes) {
         const newNode = newNodes[i];
         const oldNode = oldNodes[i];
 
-        if (!newNode && !newAddedNodes.includes(oldNode)) {
+        if (!newNode && !addedNodes.includes(oldNode)) {
             removedNodes.push(oldNode)
         }
     }
 
-    removedNodes.forEach((child) => {
+    forEach(removedNodes,(child) => {
         child.remove();
     });
 }
@@ -77,7 +77,7 @@ export function onRender(dependency, props) {
         dependency.forceUpdate = () => {
             const children = castArray(dependency.render());
             isFirst ? props.host.replaceChildren(...children.filter(isElement)) : nodesUpdate(props.host, props.host.children, children);
-            isFunction(dependency.onRendered) && dependency.onRendered({isFirst});
+            dependency.onRendered?.({isFirst});
             isFirst = false;
         }
 

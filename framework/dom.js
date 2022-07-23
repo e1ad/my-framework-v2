@@ -30,7 +30,7 @@ const appendChild = (child, element) => {
 
 export const el = (tag, attr) => {
     return (data) => {
-        const args = isPlainObject(data) && !isElement(data) ? data : {children: data};
+        const args = isPlainObject(data) && !isElement(data) ? data : { children: data };
         return creatDomElements({tag, attr, ...args});
     };
 };
@@ -92,16 +92,14 @@ export const creatDomElements = (item) => {
     }
 
     if (isFunction(item.onClick)) {
-        item.event = {name: 'click', callback: item.onClick};
+        item.event = { name: 'click', callback: item.onClick };
     }
 
     if (item.event) {
         element.addEventListener(item.event.name, item.event.callback, false);
     }
 
-    if (isFunction(item.ref)) {
-        item.ref(element);
-    }
+    item.ref?.(element);
 
     return element;
 };
@@ -113,7 +111,7 @@ export const component = (_component, args = {}) => {
             ...args,
             ref: el => {
                 const componentInstance = _component(el, {props});
-                args.ref && args.ref(componentInstance);
+                args.ref?.(componentInstance);
             },
         });
     }
