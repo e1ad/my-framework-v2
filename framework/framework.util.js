@@ -1,6 +1,6 @@
 import {castArray, forEach, isElement, isFunction} from './commons.js';
 
-export function attributeUpdate(oldNode, oldAttributes, newAttributes){
+function attributeUpdate(oldNode, oldAttributes, newAttributes){
     for (let i = 0; i < newAttributes.length; i++) {
         const newAttr = newAttributes[i];
         const oldAttr = oldAttributes.getNamedItem(newAttr.name);
@@ -27,7 +27,7 @@ function textUpdate(oldNode, newNode) {
     }
 }
 
-export function nodesUpdate(parent, oldNodes, newNodes) {
+function nodesUpdate(parent, oldNodes, newNodes) {
     const addedNodes = [];
     const removedNodes = [];
 
@@ -35,7 +35,7 @@ export function nodesUpdate(parent, oldNodes, newNodes) {
         const newNode = newNodes[i];
         const oldNode = oldNodes[i];
 
-        if (oldNode?.isEqualNode(newNode)) {
+        if (!newNode || oldNode?.isEqualNode(newNode)) {
             continue;
         }
 
