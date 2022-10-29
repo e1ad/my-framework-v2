@@ -4,21 +4,17 @@ import {RouteService} from './routeService.js';
 export const Routes = framework.component({
     name: 'Routes',
     injected: ['RouteService', 'Broadcast'],
-}, class Routes {
+}, function (RouteService, Broadcast, props){
 
-    constructor(RouteService, Broadcast, props) {
-        this.props = props;
-        RouteService.setRoutes(props.routes);
+    RouteService.setRoutes(props.routes);
 
-        Broadcast.on('routeChange', this.routeChange);
-    }
-
-    routeChange = () => {
-        const {routes} = this.props;
+    Broadcast.on('routeChange', () => {
+        const {routes, host} = props;
 
         const hash = window.location.hash.substr(1);
-        const route = routes[hash] ? routes[hash] : routes['/']
-        route.component?.(this.props.host);
-    }
 
+        const route = routes[hash] ? routes[hash] : routes['/'];
+
+        route.component?.(host);
+    });
 });
