@@ -44,9 +44,7 @@ const App = framework.component({
         }
     };
 
-    Routes(props.host, {
-        props: {routes}
-    });
+    Routes(props.host, {routes});
 });
 
 document.addEventListener('DOMContentLoaded', () => {

@@ -110,7 +110,7 @@ export const component = (_component, args = {}) => {
             tag: 'div',
             ...args,
             ref: el => {
-                const componentInstance = _component(el, {props});
+                const componentInstance = _component(el, props);
                 args.ref?.(componentInstance);
             },
         });

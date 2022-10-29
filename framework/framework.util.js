@@ -68,7 +68,7 @@ function nodesUpdate(parent, oldNodes, newNodes) {
     });
 }
 
-export function onRender(dependency, props) {
+export function onRender(host, dependency, props) {
     if (isFunction(dependency.render)) {
         let isFirst = true;
 
@@ -76,7 +76,7 @@ export function onRender(dependency, props) {
 
         dependency.forceUpdate = () => {
             const children = castArray(dependency.render());
-            isFirst ? props.host.replaceChildren(...children.filter(isElement)) : nodesUpdate(props.host, props.host.children, children);
+            isFirst ? host.replaceChildren(...children.filter(isElement)) : nodesUpdate(host, host.children, children);
             dependency.onRendered?.({isFirst});
             isFirst = false;
         }

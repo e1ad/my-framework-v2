@@ -55,22 +55,18 @@ function Framework() {
     }
 
     function component({name, injected}, dependency) {
-        return (host, {props} = {}) => {
-            return renderComponent({name,host, props, dependency, injected});
+        return (host, props = {}) => {
+            props.host = selectElement(host);
+            props.host.setAttribute(COMPONENT_NAME_ATTRIBUTE, name);
+            const _dependency = new dependency(...getInjectedItem({injected}), props);
+            onRender(props.host,_dependency, props);
+
+            setTimeout(() => {
+                onDomReady(_dependency, props);
+            });
+
+            return _dependency;
         }
-    }
-
-    function renderComponent({name, host, props = {}, dependency, injected}) {
-        props.host = selectElement(host);
-        props.host.setAttribute(COMPONENT_NAME_ATTRIBUTE, name);
-        const _dependency = new dependency(...getInjectedItem({injected}), props);
-        onRender(_dependency, props);
-
-        setTimeout(() => {
-            onDomReady(_dependency, props);
-        });
-
-        return _dependency;
     }
 
     function start() {
