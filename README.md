@@ -53,12 +53,14 @@ const App = framework.component({
         }
     };
 
-    Routes(props.host, {routes});
+    this.render = () => {
+        return component(Routes)({routes});
+    }
 });
 
 document.addEventListener('DOMContentLoaded', () => {
     // set an element with an id named 'root' in your index.html file
-    App('#root');
+    App(document.querySelector('#root'));
 });
 ```
 
