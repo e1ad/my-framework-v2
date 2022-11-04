@@ -18,6 +18,9 @@ export const RouteService = framework.service({
     createEventListener(window, 'hashchange', routeChange);
 
     function routeChange(event) {
+        if(!routes) {
+            throw 'No routes have been defined'
+        }
         const hash = window.location.hash.substr(1);
         const routeHash = routes[hash] ? hash : HOME_ROUTE;
         addToHistory(routeHash);

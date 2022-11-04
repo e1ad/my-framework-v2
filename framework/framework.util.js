@@ -74,11 +74,10 @@ export function onRender(host, dependency, props) {
 
         dependency.props = props;
 
-        dependency.forceUpdate = () => {
+        dependency.forceUpdate = (force) => {
             const children = castArray(dependency.render());
-            isFirst ? host.replaceChildren(...children.filter(isElement)) : nodesUpdate(host, host.children, children);
+            force ? host.replaceChildren(...children.filter(isElement)) : nodesUpdate(host, host.children, children);
             dependency.onRendered?.({isFirst});
-            isFirst = false;
         }
 
         dependency.setState = (newState) => {
@@ -88,13 +87,13 @@ export function onRender(host, dependency, props) {
             forEach(newState, (value, key) => {
                 if (dependency.state[key] !== value) {
                     dependency.state[key] = value;
-                    stateHasChanged = true;
+                    dependency.forceUpdate();
                 }
             });
 
             stateHasChanged && dependency.forceUpdate();
         }
 
-        dependency.forceUpdate();
+        dependency.forceUpdate(true);
     }
 }

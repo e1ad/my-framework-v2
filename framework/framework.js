@@ -1,9 +1,8 @@
-import {createEventListener, forEach, isFunction, map, selectElement, some} from './commons.js';
+import {createEventListener, forEach, isFunction, map, some} from './commons.js';
 import {onRender} from './framework.util.js';
 
 function Framework() {
 
-    const COMPONENT_NAME_ATTRIBUTE = 'component-name';
     const dependencies = {};
 
     function getInjectedItem(item) {
@@ -56,8 +55,7 @@ function Framework() {
 
     function component({name, injected}, dependency) {
         return (host, props = {}) => {
-            props.host = selectElement(host);
-            props.host.setAttribute(COMPONENT_NAME_ATTRIBUTE, name);
+            props.host = host;
             const _dependency = new dependency(...getInjectedItem({injected}), props);
             onRender(props.host,_dependency, props);
 

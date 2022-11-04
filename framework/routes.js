@@ -1,5 +1,6 @@
 import {framework} from './framework.js';
 import {RouteService} from './routeService.js';
+import {component} from './dom.js';
 
 export const Routes = framework.component({
     name: 'Routes',
@@ -9,12 +10,16 @@ export const Routes = framework.component({
     RouteService.setRoutes(props.routes);
 
     Broadcast.on('routeChange', () => {
-        const {routes, host} = props;
+        this.forceUpdate(true);
+    });
+
+    this.render = () => {
+        const {routes} = props;
 
         const hash = window.location.hash.substr(1);
 
         const route = routes[hash] ? routes[hash] : routes['/'];
 
-        route.component?.(host);
-    });
+        return component(route.component)(props);
+    }
 });
