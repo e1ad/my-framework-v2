@@ -1,6 +1,6 @@
 import {framework} from '../../framework/framework.js';
-import {component, el} from '../../framework/dom.js';
 import {GoBackButton} from '../go-back/go-back.js';
+import {el} from '../../framework/dom.js';
 
 export const DomUpdate = framework.component({
     name: 'DomUpdate',
@@ -16,7 +16,7 @@ export const DomUpdate = framework.component({
 
     render() {
       return [
-          component(GoBackButton)(),
+          GoBackButton(),
           el('div')({
               style:{
                 display: 'flex'

@@ -1,13 +1,16 @@
 import {framework} from '../../framework/framework.js';
 import {Menu} from '../menu/menu.js';
 import {CreateForm, validator} from '../createForm/createForm.js';
-import {component, el} from '../../framework/dom.js';
+import {el} from '../../framework/dom.js';
 import {GoBackButton} from '../go-back/go-back.js';
 
 export const Demo = framework.component({
     name: 'Demo',
     injected: []
 }, class Demo {
+    state = {
+        showMenu: true
+    }
 
     menuProps = {
         trigger: 'Hello world',
@@ -103,19 +106,19 @@ export const Demo = framework.component({
 
     render() {
         return el('div')([
-            component(GoBackButton)(),
-            component(Menu, { ref: el => this.menu = el })(this.menuProps),
+            GoBackButton(),
+            this.state.showMenu && Menu(this.menuProps),
             el('br')(),
             el('div')(
                 el('button')({
                     children: 'destroy menu',
                     onClick: () => {
-                        this.menu.props.host.remove();
+                        this.setState({showMenu: false});
                     },
                 })
             ),
             el('br')(),
-            component(CreateForm)(this.createFormProps),
+            CreateForm(this.createFormProps),
         ]);
     }
 });

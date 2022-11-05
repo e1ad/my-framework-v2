@@ -1,6 +1,5 @@
 import {framework} from './framework.js';
 import {RouteService} from './routeService.js';
-import {component} from './dom.js';
 
 export const Routes = framework.component({
     name: 'Routes',
@@ -20,6 +19,6 @@ export const Routes = framework.component({
 
         const route = routes[hash] ? routes[hash] : routes['/'];
 
-        return component(route.component)(props);
+        return route.component(props);
     }
 });

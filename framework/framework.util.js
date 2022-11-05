@@ -68,11 +68,9 @@ function nodesUpdate(parent, oldNodes, newNodes) {
     });
 }
 
-export function onRender(host, dependency, props) {
+export function onRender(host, dependency) {
     if (isFunction(dependency.render)) {
         let isFirst = true;
-
-        dependency.props = props;
 
         dependency.forceUpdate = (force) => {
             const children = castArray(dependency.render());

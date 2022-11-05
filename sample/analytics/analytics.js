@@ -1,5 +1,5 @@
 import {framework} from '../../framework/framework.js';
-import {component, el} from '../../framework/dom.js';
+import {el} from '../../framework/dom.js';
 import {GoBackButton} from '../go-back/go-back.js';
 import {AnalyticsService, getAnalyticsAsAttribute} from '../../framework/analyticsService.js';
 
@@ -27,7 +27,7 @@ export const Analytics = framework.component({
 
     render() {
         return [
-            component(GoBackButton)(),
+            GoBackButton(),
             el('br')(),
             el('section')({
                 ref: (ref) => this.section1 = ref,

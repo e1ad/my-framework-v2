@@ -29,8 +29,8 @@ const appendChild = (child, element) => {
 };
 
 export const el = (tag, attr) => {
-    return (data) => {
-        const args = isPlainObject(data) && !isElement(data) ? data : { children: data };
+    return (children) => {
+        const args = isPlainObject(children) && !isElement(children) ? children : { children };
         return creatDomElements({tag, attr, ...args});
     };
 };
@@ -103,16 +103,3 @@ export const creatDomElements = (item) => {
 
     return element;
 };
-
-export const component = (_component, args = {}) => {
-    return (props) => {
-        return creatDomElements({
-            tag: 'div',
-            ...args,
-            ref: el => {
-                const componentInstance = _component(el, props);
-                args.ref?.(componentInstance);
-            },
-        });
-    }
-}

@@ -7,7 +7,6 @@ import {About} from './about/about.js';
 import {Demo} from './demo/demo.js';
 import {DomUpdate} from './dom-update/dom-update.js';
 import {Analytics} from './analytics/analytics.js';
-import {component} from '../framework/dom.js';
 import {AnalyticsService, ANALYTICS_CUSTOM_EVENT} from '../framework/analyticsService.js';
 
 const App = framework.component({
@@ -15,7 +14,7 @@ const App = framework.component({
     injected: []
 }, function () {
 
-    // AnalyticsService(props.host, {category: 'rootApp'}).addEventListener((event)=>{
+    // AnalyticsService(this.host, {category: 'rootApp'}).addEventListener((event)=>{
     //     console.log(event.detail) ;
     // });
 
@@ -43,12 +42,12 @@ const App = framework.component({
     };
 
     this.render = () => {
-      return component(Routes)({routes});
+      return Routes({routes});
     }
 });
 
 framework.start();
 
 document.addEventListener('DOMContentLoaded', () => {
-    App(document.querySelector('#root'));
+    document.querySelector('#root').append(App());
 });

@@ -32,7 +32,7 @@ export const RouteService = framework.service({
 
     _self.goTo = (goToPath) => {
         window.location.hash = `#${goToPath}`;
-    }
+    };
 
     function addToHistory(goToPath) {
         if (getLast() === goToPath) {
@@ -49,10 +49,10 @@ export const RouteService = framework.service({
     _self.goBack = () => {
         const previous = getPrevious();
         previous && _self.goTo(previous);
-    }
+    };
 
     _self.setRoutes = (_routes) => {
         routes = _routes;
-    }
+    };
 
 });
