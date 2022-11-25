@@ -108,6 +108,7 @@ export function onRender(host, dependency, injected) {
         const children = castArray(_this.render());
         force ? host.replaceChildren(...children.filter(isElement)) : nodesUpdate(host, host.children, children);
         _this.onRendered?.({isFirst});
+        isFirst = false;
     }
 
     function useState(initialValue){
