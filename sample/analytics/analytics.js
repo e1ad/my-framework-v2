@@ -6,31 +6,31 @@ import {AnalyticsService, getAnalyticsAsAttribute} from '../../framework/analyti
 export const Analytics = framework.component({
     name: 'analytics',
     injected: []
-}, class About {
-    state = {
-        isButtonShow: false
-    }
+}, function () {
+    let section1 = null;
+    let section2 = null;
+    const isButtonShow = this.useState(false);
 
-    onDomReady(){
-        AnalyticsService(this.section1, {category: 'section1'}).addEventListener((event) => {
+    this. onDomReady= () => {
+        AnalyticsService(section1, {category: 'section1'}).addEventListener((event) => {
             console.log(event.detail) ;
         });
 
-        AnalyticsService(this.section2, {category: 'section2'}).addEventListener((event) => {
+        AnalyticsService(section2, {category: 'section2'}).addEventListener((event) => {
             console.log(event.detail) ;
         });
     }
 
-    toggleShowButton = () => {
-        this.setState({isButtonShow: !this.state.isButtonShow});
+    function toggleShowButton()  {
+        isButtonShow.set(!isButtonShow.get())
     }
 
-    render() {
+    this.render = () => {
         return [
             GoBackButton(),
             el('br')(),
             el('section')({
-                ref: (ref) => this.section1 = ref,
+                ref: (ref) => section1 = ref,
                 children:[
                     el('input',getAnalyticsAsAttribute('on-input','input'))('Click'),
                 ]
@@ -38,15 +38,15 @@ export const Analytics = framework.component({
             el('br')(),
             el('br')(),
             el('section')({
-               ref: (ref) => this.section2 = ref,
+               ref: (ref) => section2 = ref,
                children:[
                    el('button')({
-                       children: `${this.state.isButtonShow ? 'hide' : 'show'} button`,
-                       onClick: this.toggleShowButton
+                       children: `${isButtonShow.get() ? 'hide' : 'show'} button`,
+                       onClick: toggleShowButton
                    }),
                    el('br')(),
                    el('br')(),
-                    this.state.isButtonShow && el('button', getAnalyticsAsAttribute('on-button','click,mouseover'))('Click'),
+                   isButtonShow.get() && el('button', getAnalyticsAsAttribute('on-button','click,mouseover'))('Click'),
                ]
             })
         ];

@@ -71,25 +71,19 @@ Only the changed element will be rerender
 export const DomUpdate = framework.component({
     name: 'DomUpdate',
     injected: [],
-}, class DomUpdate {
-    interval;
-    
-    state = {
-        counter: 0
+}, function () {
+    const counter = this.useState(0);
+
+    const interval = setInterval(() => {
+        counter.set(counter.get() + 1);
+    }, 1000);
+
+    this.onDestroy = () => {
+        clearInterval(interval);
     }
 
-    constructor() {
-        this.interval = setInterval(() => {
-            this.setState({counter: this.state.counter + 1})
-        }, 1000);
-    }
-
-    onDestroy() {
-        clearInterval(this.interval);
-    }
-
-    render() {
-        return el('div')(`counter = ${this.state.counter}`);
+    this.render = () => {
+        return el('div')(`counter = ${counter.get()}`);
     };
 })
 ```

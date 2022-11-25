@@ -14,24 +14,24 @@ import {el} from '../../framework/dom.js';
 export const CreateForm = framework.component({
     name: 'CreateForm',
     injected: [],
-}, class CreateForm {
-    _errorsRef = {}
-    _values = {};
+}, function (props) {
+    const _errorsRef = {}
+    const _values = {};
 
-    getFields() {
-        return map(this.props.fields, (field) => FieldContainer({
+    function getFields() {
+        return map(props.fields, (field) => FieldContainer({
                 children: [
                     el('label')(field.label),
-                    this.getInputByType(field),
+                    getInputByType(field),
                     ErrorContainer({
-                        ref: (el) => this._errorsRef[field.name] = el,
+                        ref: (el) => _errorsRef[field.name] = el,
                     })
                 ]
             })
         );
     }
 
-    getDefaultInput(field) {
+    function getDefaultInput(field) {
         return el('input', {
             type: field.type,
             name: field.name,
@@ -39,7 +39,7 @@ export const CreateForm = framework.component({
         })();
     }
 
-    getSelectInput(field) {
+    function getSelectInput(field) {
         return el('select', {name: field.name})(
             field.items.map(item => ({
                     tag: 'option',
@@ -50,8 +50,8 @@ export const CreateForm = framework.component({
         );
     }
 
-    getCheckboxInput(field) {
-        this._values[field.name] = {};
+    function getCheckboxInput(field) {
+        _values[field.name] = {};
 
         return el('div', 'class=checkbox-container')(
             reduce(field.items, (acc, item) => {
@@ -72,36 +72,36 @@ export const CreateForm = framework.component({
         );
     }
 
-    getInputByType(field) {
+    function getInputByType(field) {
         switch (field.type) {
             case 'select':
-                return this.getSelectInput(field);
+                return getSelectInput(field);
             case 'checkbox':
-                return this.getCheckboxInput(field);
+                return getCheckboxInput(field);
             default:
-                return this.getDefaultInput(field);
+                return getDefaultInput(field);
         }
     }
 
-    getSubmitButton() {
+    function getSubmitButton() {
         return el('button')({
-            children: this.props.submit.text || 'Save',
+            children: props.submit.text || 'Save',
             onClick: (event) => {
                 event.preventDefault();
-                this.props.submit.onClick(this._values);
+                props.submit.onClick(_values);
             }
         });
     }
 
-    getFieldErrors(field) {
+    function getFieldErrors(field) {
         return reduce(field.validators, (acc, validator) => {
-            const error = validator(field, this._values) || {};
+            const error = validator(field, _values) || {};
             return {...acc, ...error};
         }, {});
     }
 
-    getErrorInfo(field){
-        const error = this.getFieldErrors(field);
+    function getErrorInfo(field){
+        const error = getFieldErrors(field);
         return reduce([ERROR_CODE.REQUIRED, ERROR_CODE.MIN_NUMBER], (acc, errorCode)=> {
             const message = (error && error[errorCode]) || ''
             acc.isValid = acc.isValid || message;
@@ -110,40 +110,40 @@ export const CreateForm = framework.component({
         },{ isValid : false, message:'' });
     }
 
-    handleError(field, input) {
-        const {isValid, message} = this.getErrorInfo(field);
-        this._errorsRef[field.name].innerText = message;
+    function handleError(field, input) {
+        const {isValid, message} = getErrorInfo(field);
+        _errorsRef[field.name].innerText = message;
         styleElement(input, {border: `solid 1px ${isValid ? 'red' : 'black'}`})
     }
 
-    getValueByType(field, input) {
+    function getValueByType(field, input) {
         switch (field.type) {
             case 'number':
                 return input.valueAsNumber;
             case 'checkbox':
-                return {...this._values[field.name], [input.value]: input.checked};
+                return {..._values[field.name], [input.value]: input.checked};
             default:
                 return input.value;
         }
     }
 
-    onFormChange = (event) => {
+    function onFormChange(event) {
         const input = event.target;
         const name = input.attributes.name.value;
-        const field = find(this.props.fields, field => field.name === name);
-        this._values[name] = this.getValueByType(field, input);
-        this.handleError(field, input);
+        const field = find(props.fields, field => field.name === name);
+        _values[name] = getValueByType(field, input);
+        handleError(field, input);
     }
 
-    render() {
+    this.render = () => {
         return CreatFormWrapper({
             event: {
                 name: 'change',
-                callback: this.onFormChange
+                callback: onFormChange
             },
             children: [
-                ...this.getFields(),
-                this.getSubmitButton()
+                ...getFields(),
+                getSubmitButton()
             ]
         });
     }

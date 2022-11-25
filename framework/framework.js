@@ -41,10 +41,7 @@ function Framework() {
 
     function component({name, injected}, dependency) {
         const createComponent =  (host, props = {}) => {
-            const instance = new dependency(...getInjectedItem({injected}), props);
-            instance.host = host;
-            instance.props = props;
-            onRender(host,instance);
+            const instance = onRender(host, dependency, [...getInjectedItem({injected}), props]);
 
             setTimeout(() => {
                 onDomReady(host, instance);

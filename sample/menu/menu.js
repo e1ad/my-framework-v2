@@ -7,82 +7,76 @@ import {getAnalyticsAsAttribute} from '../../framework/analyticsService.js';
 export const Menu = framework.component({
     name: 'Menu',
     injected: []
-}, class Menu {
-    destroyClickOutside = noop;
-    state = {
-        isMenuOpen: false,
-    }
+}, function (props){
+    const isMenuOpen = this.useState(false);
+    let triggerButton, destroyClickOutside, ul, buttonPosition = null
 
-    getMenuList() {
+    function getMenuList() {
         return MenuListContainer({
-            ref: (ul) => this.ul = ul,
+            ref: (ref) => ul = ref,
             attr: getAnalyticsAsAttribute('menu-dropdown'),
-            children: map(this.props.items, (item) => MenuItem({
+            children: map(props.items, (item) => MenuItem({
                 children: item.name,
-                onClick: (event) => this.onItemClick(item, event)
+                onClick: (event) => onItemClick(item, event)
             }))
         });
     }
 
-    onRendered() {
-        if (!this.ul) {
+   this.onRendered = () => {
+        if (!ul) {
             return
         }
 
-        this.setListPosition();
+        setListPosition();
 
-        this.destroyClickOutside();
+        destroyClickOutside?.();
 
-        this.destroyClickOutside = clickOutside(this.ul, {
-            whitelist: [this.triggerButton],
-            onClick: this.onToggle.bind(this)
+        destroyClickOutside = clickOutside(ul, {
+            whitelist: [triggerButton],
+            onClick: onToggle
         });
     }
 
-    setListPosition(){
-        const {left, top, height} = this.buttonPosition;
+    function setListPosition(){
+        const {left, top, height} = buttonPosition;
 
-        styleElement(this.ul, {
+        styleElement(ul, {
             left: `${left}px`,
             top: `${height + top + 2}px`,
         })
     }
 
-    onDomReady() {
-        this.buttonPosition = this.triggerButton.getBoundingClientRect();
-
-       this.setState({ isMenuOpen: this.props.initOpen });
-
-        this.ul && this.setListPosition();
+     this.onDomReady = () => {
+        buttonPosition = triggerButton.getBoundingClientRect();
+        isMenuOpen.set(props.initOpen);
+        ul && setListPosition();
     }
 
-    onToggle() {
-        this.ul = null;
-
-        this.setState({ isMenuOpen: !this.state.isMenuOpen});
-
-        this.props.onToggle?.(this.state.isMenuOpen);
+    function onToggle() {
+        ul = null;
+        isMenuOpen.set(!isMenuOpen.get());
+        props.onToggle?.(isMenuOpen.get());
     }
 
-    onItemClick(item, event) {
-        this.props.closeOnSelect && this.onToggle();
-        this.props.onSelect?.(item, event);
+    function onItemClick(item, event) {
+        props.closeOnSelect && onToggle();
+        props.onSelect?.(item, event);
     }
 
-    onDestroy() {
-        this.destroyClickOutside();
-         this.props.onDestroy?.();
+    this.onDestroy = () => {
+        destroyClickOutside?.();
+        props.onDestroy?.();
     }
 
-    render() {
+    this.render = ()=> {
         return [
             TriggerButton({
-                children: this.props.trigger,
-                onClick: this.onToggle.bind(this),
-                ref: (el) => this.triggerButton = el
+                children: props.trigger,
+                onClick: onToggle,
+                ref: (el) => triggerButton = el
             }),
 
-            this.state.isMenuOpen && this.getMenuList()
+            isMenuOpen.get() && getMenuList()
         ];
     }
 })

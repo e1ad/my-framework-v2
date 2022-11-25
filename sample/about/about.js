@@ -5,9 +5,9 @@ import {GoBackButton} from '../go-back/go-back.js';
 export const About = framework.component({
     name: 'About',
     injected: []
-}, class About {
+}, function () {
 
-    render() {
+    this.render = () => {
         return [
             GoBackButton(),
             el('br')(),

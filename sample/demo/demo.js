@@ -7,12 +7,10 @@ import {GoBackButton} from '../go-back/go-back.js';
 export const Demo = framework.component({
     name: 'Demo',
     injected: []
-}, class Demo {
-    state = {
-        showMenu: true
-    }
+}, function () {
+    const showMenu = this.useState(true);
 
-    menuProps = {
+    const menuProps = {
         trigger: 'Hello world',
         closeOnSelect: true,
         initOpen: false,
@@ -38,7 +36,7 @@ export const Demo = framework.component({
         ]
     };
 
-    createFormProps = {
+    const createFormProps = {
         fields: [
             {
                 name: 'first_name',
@@ -100,25 +98,25 @@ export const Demo = framework.component({
         }
     };
 
-    onDomReady() {
+    this.onDomReady = () => {
         console.log('onDomReady');
     }
 
-    render() {
+    this.render = () => {
         return el('div')([
             GoBackButton(),
-            this.state.showMenu && Menu(this.menuProps),
+            showMenu.get() && Menu(menuProps),
             el('br')(),
             el('div')(
                 el('button')({
                     children: 'destroy menu',
                     onClick: () => {
-                        this.setState({showMenu: false});
+                        showMenu.set(false)
                     },
                 })
             ),
             el('br')(),
-            CreateForm(this.createFormProps),
+            CreateForm(createFormProps),
         ]);
     }
 });

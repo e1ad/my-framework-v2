@@ -79,7 +79,7 @@ export function onDomReady(host, instance) {
             }
         });
 
-        observer.observe(host.parentNode, {childList: true});
+        observer.observe(host.parentNode || host, {childList: true});
 
         const hashChangeDestroyer = createEventListener(window, 'hashchange', () => {
             instance.onDestroy();
@@ -91,30 +91,41 @@ export function onDomReady(host, instance) {
     instance.onDomReady?.();
 }
 
-export function onRender(host, instance) {
-    if (isFunction(instance.render)) {
-        let isFirst = true;
+export function onRender(host, dependency, injected) {
+    let isFirst = true;
+    let counter = 0
 
-        instance.forceUpdate = (force) => {
-            const children = castArray(instance.render());
-            force ? host.replaceChildren(...children.filter(isElement)) : nodesUpdate(host, host.children, children);
-            instance.onRendered?.({isFirst});
-        }
+    const _this = {
+        host,
+        forceUpdate,
+        useState
+    };
 
-        instance.setState = (newState) => {
-            instance.state = instance.state || {};
-            let stateHasChanged = false;
+    dependency.apply(_this, injected);
 
-            forEach(newState, (value, key) => {
-                if (instance.state[key] !== value) {
-                    instance.state[key] = value;
-                    stateHasChanged = true;
-                }
-            });
-
-            stateHasChanged && instance.forceUpdate();
-        }
-
-        instance.forceUpdate(true);
+    function forceUpdate(force) {
+        const children = castArray(_this.render());
+        force ? host.replaceChildren(...children.filter(isElement)) : nodesUpdate(host, host.children, children);
+        _this.onRendered?.({isFirst});
     }
+
+    function useState(initialValue){
+        counter++;
+        _this.state = _this.state || {};
+        _this.state[counter] = initialValue
+
+        return {
+            get: () => _this.state[counter],
+            set: (value) => {
+                if (_this.state[counter] !== value) {
+                    _this.state[counter] = value;
+                    _this.forceUpdate();
+                }
+            }
+        }
+    }
+
+    _this.forceUpdate(true);
+
+    return _this;
 }
