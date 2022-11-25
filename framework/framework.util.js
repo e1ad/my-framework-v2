@@ -94,6 +94,7 @@ export function onDomReady(host, instance) {
 export function onRender(host, dependency, injected) {
     let isFirst = true;
     let counter = 0
+    const state = {};
 
     const _this = {
         host,
@@ -111,15 +112,14 @@ export function onRender(host, dependency, injected) {
 
     function useState(initialValue){
         counter++;
-        _this.state = _this.state || {};
-        _this.state[counter] = initialValue
+        state[counter] = initialValue
 
         return {
-            get: () => _this.state[counter],
+            get: () => state[counter],
             set: (value) => {
-                if (_this.state[counter] !== value) {
-                    _this.state[counter] = value;
-                    _this.forceUpdate();
+                if (state[counter] !== value) {
+                    state[counter] = value;
+                    forceUpdate();
                 }
             }
         }
