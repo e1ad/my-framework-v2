@@ -1,6 +1,6 @@
-import {createEventListener, forEach, isFunction, map, some} from './commons.js';
-import {createElement } from './dom.js';
-import {onRender} from './framework.util.js';
+import {forEach, map} from './commons.js';
+import {createElement} from './dom.js';
+import {onDomReady, onRender} from './framework.util.js';
 
 function Framework() {
 
@@ -31,29 +31,6 @@ function Framework() {
         return dependency;
     }
 
-    function onDomReady(host, dependency) {
-        if (isFunction(dependency.onDestroy)) {
-            const observer = new MutationObserver((event) => {
-                const isHostElement = some([...event[0].removedNodes], el => el.isEqualNode(host));
-
-                if (isHostElement) {
-                    dependency.onDestroy();
-                    observer.disconnect();
-                }
-            });
-
-            observer.observe(host.parentNode, {childList: true});
-
-            const hashChangeDestroyer = createEventListener(window, 'hashchange', () => {
-                dependency.onDestroy();
-                observer.disconnect();
-                hashChangeDestroyer();
-            });
-        }
-
-        dependency.onDomReady?.();
-    }
-
     function renderComponent(component, props)  {
         const host = createElement('div');
         const instance = component(host, props);
@@ -64,16 +41,16 @@ function Framework() {
 
     function component({name, injected}, dependency) {
         const createComponent =  (host, props = {}) => {
-            const _dependency = new dependency(...getInjectedItem({injected}), props);
-            _dependency.host = host;
-            _dependency.props = props;
-            onRender(host,_dependency);
+            const instance = new dependency(...getInjectedItem({injected}), props);
+            instance.host = host;
+            instance.props = props;
+            onRender(host,instance);
 
             setTimeout(() => {
-                onDomReady(host, _dependency);
+                onDomReady(host, instance);
             });
 
-            return _dependency
+            return instance
         };
 
         return (props) => renderComponent(createComponent, props);

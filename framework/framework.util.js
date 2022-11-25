@@ -1,4 +1,4 @@
-import {castArray, forEach, isElement, isFunction} from './commons.js';
+import {castArray, createEventListener, forEach, isElement, isFunction, some} from './commons.js';
 
 function attributeUpdate(oldNode, oldAttributes, newAttributes){
     for (let i = 0; i < newAttributes.length; i++) {
@@ -68,30 +68,53 @@ function nodesUpdate(parent, oldNodes, newNodes) {
     });
 }
 
-export function onRender(host, dependency) {
-    if (isFunction(dependency.render)) {
+export function onDomReady(host, instance) {
+    if (isFunction(instance.onDestroy)) {
+        const observer = new MutationObserver((event) => {
+            const isHostElement = some([...event[0].removedNodes], el => el.isEqualNode(host));
+
+            if (isHostElement) {
+                instance.onDestroy();
+                observer.disconnect();
+            }
+        });
+
+        observer.observe(host.parentNode, {childList: true});
+
+        const hashChangeDestroyer = createEventListener(window, 'hashchange', () => {
+            instance.onDestroy();
+            observer.disconnect();
+            hashChangeDestroyer();
+        });
+    }
+
+    instance.onDomReady?.();
+}
+
+export function onRender(host, instance) {
+    if (isFunction(instance.render)) {
         let isFirst = true;
 
-        dependency.forceUpdate = (force) => {
-            const children = castArray(dependency.render());
+        instance.forceUpdate = (force) => {
+            const children = castArray(instance.render());
             force ? host.replaceChildren(...children.filter(isElement)) : nodesUpdate(host, host.children, children);
-            dependency.onRendered?.({isFirst});
+            instance.onRendered?.({isFirst});
         }
 
-        dependency.setState = (newState) => {
-            dependency.state = dependency.state || {};
+        instance.setState = (newState) => {
+            instance.state = instance.state || {};
             let stateHasChanged = false;
 
             forEach(newState, (value, key) => {
-                if (dependency.state[key] !== value) {
-                    dependency.state[key] = value;
-                    dependency.forceUpdate();
+                if (instance.state[key] !== value) {
+                    instance.state[key] = value;
+                    stateHasChanged = true;
                 }
             });
 
-            stateHasChanged && dependency.forceUpdate();
+            stateHasChanged && instance.forceUpdate();
         }
 
-        dependency.forceUpdate(true);
+        instance.forceUpdate(true);
     }
 }
