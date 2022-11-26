@@ -6,8 +6,16 @@ export const createElement = (tag, attributes = {}, children) => {
 
     const _attributes = getAttributes(attributes);
 
-    forEach(_attributes, (value, key) => {
-        element.setAttribute(key, value);
+    forEach(_attributes, (item, key) => {
+        const value = Array.isArray(item) ? item.join(' ') : item;
+        switch (key) {
+            case 'className':
+                element.setAttribute('class', value);
+                break
+            default:
+                element.setAttribute(key, value);
+                break
+        }
     });
 
     forEach(castArray(children), (child) => {
@@ -55,16 +63,21 @@ let counter = 0;
 
 export const style = (tag, style) => {
     const head = document.querySelector('head');
-    const styleAttribute = 'data-style';
     const uniqId = `style_${counter = counter + 1}`;
-    const styleText = (isFunction(style) ? style() : style).replaceAll(':host', `[${styleAttribute}="${uniqId}"]`);
+    const styleText = (isFunction(style) ? style() : style).replaceAll(':host', `.${uniqId}`);
 
     head.append(createElement('style', null, styleText));
 
     return ({ attr = {}, ...args}) => {
+        if (isFunction(tag)){
+            return tag({...args, className: uniqId});
+        }
+
+        const className = Array.isArray(attr.className) ? [...attr.className, uniqId] : uniqId;
+
         return creatDomElements({
             tag,
-            attr: isString(attr) ? `${attr}, ${styleAttribute}=${uniqId}` : {...attr, [styleAttribute]: uniqId},
+            attr: isString(attr) ? `${attr}, className=${uniqId}` : {...attr, className},
             ...args
         });
     };
