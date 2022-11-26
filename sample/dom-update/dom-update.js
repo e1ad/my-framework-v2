@@ -3,7 +3,6 @@ import {GoBackButton} from '../go-back/go-back.js';
 import {el} from '../../framework/dom.js';
 
 export const DomUpdate = framework.component({
-    name: 'DomUpdate',
     injected: [],
 }, function (){
     const counter = this.useState(0);

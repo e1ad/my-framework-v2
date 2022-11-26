@@ -3,7 +3,6 @@ import {el} from '../../framework/dom.js';
 import {GoBackButton} from '../go-back/go-back.js';
 
 export const About = framework.component({
-    name: 'About',
     injected: []
 }, function () {
 

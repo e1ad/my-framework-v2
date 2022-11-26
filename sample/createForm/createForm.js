@@ -13,7 +13,6 @@ import {el} from '../../framework/dom.js';
 import {Button} from '../button/button.js';
 
 export const CreateForm = framework.component({
-    name: 'CreateForm',
     injected: [],
 }, function (props) {
     const _errorsRef = {}

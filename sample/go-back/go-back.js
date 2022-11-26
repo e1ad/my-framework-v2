@@ -9,7 +9,6 @@ const StyledButton = style(Button, `
 `);
 
 export const GoBackButton = framework.component({
-    name: 'GoBackButton',
     injected: ['RouteService']
 }, function (RouteService, props) {
 

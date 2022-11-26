@@ -5,7 +5,6 @@ import {framework} from '../../framework/framework.js';
 import {getAnalyticsAsAttribute} from '../../framework/analyticsService.js';
 
 export const Menu = framework.component({
-    name: 'Menu',
     injected: []
 }, function (props){
     const isMenuOpen = this.useState(false);

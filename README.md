@@ -37,7 +37,6 @@ export const TestBService = framework.service({
 
 ```js  
 const App = framework.component({
-    name: 'App',
     injected: []
 }, function () {
 
@@ -69,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
 Only the changed element will be rerender
 ```js 
 export const DomUpdate = framework.component({
-    name: 'DomUpdate',
     injected: [],
 }, function () {
     const counter = this.useState(0);

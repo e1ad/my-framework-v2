@@ -10,7 +10,6 @@ import {Analytics} from './analytics/analytics.js';
 import {AnalyticsService, ANALYTICS_CUSTOM_EVENT} from '../framework/analyticsService.js';
 
 const App = framework.component({
-    name: 'App',
     injected: []
 }, function () {
 

@@ -4,7 +4,6 @@ import {GoBackButton} from '../go-back/go-back.js';
 import {AnalyticsService, getAnalyticsAsAttribute} from '../../framework/analyticsService.js';
 
 export const Analytics = framework.component({
-    name: 'analytics',
     injected: []
 }, function () {
     let section1 = null;

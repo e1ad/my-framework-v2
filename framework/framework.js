@@ -39,7 +39,7 @@ function Framework() {
         return host;
     }
 
-    function component({name, injected}, dependency) {
+    function component({injected}, dependency) {
         const createComponent =  (host, props = {}) => {
             const instance = render(host, dependency, [...getInjectedItem({injected}), props]);
 

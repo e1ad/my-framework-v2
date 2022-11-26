@@ -5,7 +5,6 @@ import {el} from '../../framework/dom.js';
 import {GoBackButton} from '../go-back/go-back.js';
 
 export const Demo = framework.component({
-    name: 'Demo',
     injected: []
 }, function () {
     const showMenu = this.useState(true);
@@ -99,7 +98,7 @@ export const Demo = framework.component({
     };
 
     this.onDomReady = () => {
-        console.log('onDomReady');
+        console.log('dom ready');
     }
 
     this.render = () => {
@@ -107,14 +106,6 @@ export const Demo = framework.component({
             GoBackButton(),
             showMenu.get() && Menu(menuProps),
             el('br')(),
-            el('div')(
-                el('button')({
-                    children: 'destroy menu',
-                    onClick: () => {
-                        showMenu.set(false)
-                    },
-                })
-            ),
             el('br')(),
             CreateForm(createFormProps),
         ]);

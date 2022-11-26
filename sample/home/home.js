@@ -2,7 +2,6 @@ import {framework} from '../../framework/framework.js';
 import {el} from '../../framework/dom.js';
 
 export const Home = framework.component({
-    name: 'Home',
     injected: []
 }, function () {
 
