@@ -91,15 +91,35 @@ export function onDomReady(host, instance) {
     instance.onDomReady?.();
 }
 
+
+function useState(initialValue, onSet){
+    let currentValue = initialValue;
+
+    const setValue = (value) => {
+        if (currentValue !== value) {
+            currentValue = value;
+            onSet();
+        }
+    }
+
+    const get = () => currentValue;
+
+    return {
+        get,
+        set: (value) => {
+            const newValue = isFunction(value) ? value(get()) : value;
+            setValue(newValue)
+        }
+    };
+}
+
 export function onRender(host, dependency, injected) {
     let isFirst = true;
-    let counter = 0
-    const state = {};
 
     const _this = {
         host,
         forceUpdate,
-        useState
+        useState: (initialValue) => useState(initialValue, forceUpdate)
     };
 
     dependency.apply(_this, injected);
@@ -109,28 +129,6 @@ export function onRender(host, dependency, injected) {
         force ? host.replaceChildren(...children.filter(isElement)) : nodesUpdate(host, host.children, children);
         _this.onRendered?.({isFirst});
         isFirst = false;
-    }
-
-    function useState(initialValue){
-        counter++;
-        state[counter] = initialValue
-
-        const setValue = (value) => {
-            if (state[counter] !== value) {
-                state[counter] = value;
-                forceUpdate();
-            }
-        }
-
-        const get = () => state[counter];
-
-        return {
-            get,
-            set: (value) => {
-                const newValue = isFunction(value) ? value(get()) : value;
-                setValue(newValue)
-            }
-        }
     }
 
     _this.forceUpdate(true);
