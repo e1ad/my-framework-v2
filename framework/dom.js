@@ -64,7 +64,7 @@ let counter = 0;
 export const style = (tag, style) => {
     const head = document.querySelector('head');
     const uniqId = `style_${counter = counter + 1}`;
-    const styleText = (isFunction(style) ? style() : style).replaceAll(':host', `.${uniqId}`);
+    const styleText = style.replaceAll(':host', `.${uniqId}`);
 
     head.append(createElement('style', null, styleText));
 
