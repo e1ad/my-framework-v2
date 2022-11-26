@@ -75,7 +75,7 @@ export const DomUpdate = framework.component({
     const counter = this.useState(0);
 
     const interval = setInterval(() => {
-        counter.set(counter.get() + 1);
+        counter.set((previousValue) => previousValue + 1);
     }, 1000);
 
     this.onDestroy = () => {
