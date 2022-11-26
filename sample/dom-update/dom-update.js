@@ -8,11 +8,11 @@ export const DomUpdate = framework.component({
 }, function (){
     const counter = this.useState(0);
 
-    const onAddClick = (add) =>{
-        counter.set(counter.get() + add);
+    const onAddClick = (add) => {
+        counter.set((previousValue) => previousValue + add);
     }
 
-    this.render = ()=> {
+    this.render = () => {
       return [
           GoBackButton(),
           el('div')({

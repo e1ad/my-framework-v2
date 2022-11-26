@@ -10,6 +10,7 @@ import {ERROR_MESSAGE, ERROR_CODE} from './form.const.js';
 import {CreatFormWrapper, ErrorContainer, FieldContainer} from './createForm.style.js';
 import {framework} from '../../framework/framework.js';
 import {el} from '../../framework/dom.js';
+import {Button} from '../button/button.js';
 
 export const CreateForm = framework.component({
     name: 'CreateForm',
@@ -23,9 +24,7 @@ export const CreateForm = framework.component({
                 children: [
                     el('label')(field.label),
                     getInputByType(field),
-                    ErrorContainer({
-                        ref: (el) => _errorsRef[field.name] = el,
-                    })
+                    ErrorContainer({ref: (el) => _errorsRef[field.name] = el})
                 ]
             })
         );
@@ -84,7 +83,8 @@ export const CreateForm = framework.component({
     }
 
     function getSubmitButton() {
-        return el('button')({
+        return Button({
+            theme: 'primary',
             children: props.submit.text || 'Save',
             onClick: (event) => {
                 event.preventDefault();

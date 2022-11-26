@@ -1,7 +1,8 @@
 import {framework} from '../../framework/framework.js';
 import {style} from '../../framework/dom.js';
+import {Button} from '../button/button.js';
 
-const StyleGoBackButton = style('button', `
+const ButtonWrapper = style('div', `
     :host {
       margin-bottom: 10px;
     }
@@ -13,6 +14,8 @@ export const GoBackButton = framework.component({
 }, function (RouteService) {
 
     this.render = () => {
-        return StyleGoBackButton({children: 'Go Back', onClick: RouteService.goBack});
+        return ButtonWrapper({
+            children: Button({theme: 'secondary', children: 'Go Back', onClick: RouteService.goBack})
+        });
     }
 })

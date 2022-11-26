@@ -54,7 +54,7 @@ export const Menu = framework.component({
 
     function onToggle() {
         ul = null;
-        isMenuOpen.set(!isMenuOpen.get());
+        isMenuOpen.set((previousValue) => !previousValue);
         props.onToggle?.(isMenuOpen.get());
     }
 
@@ -68,14 +68,13 @@ export const Menu = framework.component({
         props.onDestroy?.();
     }
 
-    this.render = ()=> {
+    this.render = () => {
         return [
             TriggerButton({
                 children: props.trigger,
                 onClick: onToggle,
                 ref: (el) => triggerButton = el
             }),
-
             isMenuOpen.get() && getMenuList()
         ];
     }

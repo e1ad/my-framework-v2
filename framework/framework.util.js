@@ -115,13 +115,20 @@ export function onRender(host, dependency, injected) {
         counter++;
         state[counter] = initialValue
 
+        const setValue = (value) => {
+            if (state[counter] !== value) {
+                state[counter] = value;
+                forceUpdate();
+            }
+        }
+
+        const get = () => state[counter];
+
         return {
-            get: () => state[counter],
+            get,
             set: (value) => {
-                if (state[counter] !== value) {
-                    state[counter] = value;
-                    forceUpdate();
-                }
+                const newValue = isFunction(value) ? value(get()) : value;
+                setValue(newValue)
             }
         }
     }
