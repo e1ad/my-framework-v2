@@ -95,25 +95,20 @@ export function onDomReady(host, instance) {
 function useState(initialValue, onSet){
     let currentValue = initialValue;
 
-    const setValue = (value) => {
-        if (currentValue !== value) {
-            currentValue = value;
+    const get = () => currentValue;
+
+    const set = (value) => {
+        const newValue = isFunction(value) ? value(get()) : value;
+        if (currentValue !== newValue) {
+            currentValue = newValue;
             onSet();
         }
     }
 
-    const get = () => currentValue;
-
-    return {
-        get,
-        set: (value) => {
-            const newValue = isFunction(value) ? value(get()) : value;
-            setValue(newValue)
-        }
-    };
+    return {get, set};
 }
 
-export function onRender(host, dependency, injected) {
+export function render(host, dependency, injected) {
     let isFirst = true;
 
     const _this = {

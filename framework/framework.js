@@ -1,6 +1,6 @@
 import {forEach, map} from './commons.js';
 import {createElement} from './dom.js';
-import {onDomReady, onRender} from './framework.util.js';
+import {onDomReady, render} from './framework.util.js';
 
 function Framework() {
 
@@ -41,7 +41,7 @@ function Framework() {
 
     function component({name, injected}, dependency) {
         const createComponent =  (host, props = {}) => {
-            const instance = onRender(host, dependency, [...getInjectedItem({injected}), props]);
+            const instance = render(host, dependency, [...getInjectedItem({injected}), props]);
 
             setTimeout(() => {
                 onDomReady(host, instance);
