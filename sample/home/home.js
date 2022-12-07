@@ -9,8 +9,7 @@ export const Home = framework.component({
         return el('ul')([
             el('li')(el('a', 'href=#/demo')('Demo')),
             el('li')(el('a', 'href=#/about')('About')),
-            el('li')(el('a', 'href=#/dom-update')('Dom Update')),
-            el('li')(el('a', 'href=#/analytics')('Analytics'))
+            el('li')(el('a', 'href=#/dom-update')('Dom Update'))
         ]);
     }
 });

@@ -6,16 +6,10 @@ import {Routes} from '../framework/routes.js';
 import {About} from './about/about.js';
 import {Demo} from './demo/demo.js';
 import {DomUpdate} from './dom-update/dom-update.js';
-import {Analytics} from './analytics/analytics.js';
-import {AnalyticsService, ANALYTICS_CUSTOM_EVENT} from '../framework/analyticsService.js';
 
 const App = framework.component({
     injected: []
 }, function () {
-
-    // AnalyticsService(this.host, {category: 'rootApp'}).addEventListener((event)=>{
-    //     console.log(event.detail) ;
-    // });
 
     const routes = {
         '/': {
@@ -34,10 +28,6 @@ const App = framework.component({
             name: 'dom-update',
             component: DomUpdate
         },
-        '/analytics': {
-            name: 'analytics',
-            component: Analytics
-        }
     };
 
     this.render = () => {

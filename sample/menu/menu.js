@@ -2,7 +2,6 @@ import {clickOutside, map, noop} from '../../framework/commons.js';
 import {styleElement} from '../../framework/dom.js';
 import {MenuItem, MenuListContainer, TriggerButton} from './menu.style.js';
 import {framework} from '../../framework/framework.js';
-import {getAnalyticsAsAttribute} from '../../framework/analyticsService.js';
 
 export const Menu = framework.component({
     injected: []
@@ -13,7 +12,6 @@ export const Menu = framework.component({
     function getMenuList() {
         return MenuListContainer({
             ref: (ref) => ul = ref,
-            attr: getAnalyticsAsAttribute('menu-dropdown'),
             children: map(props.items, (item) => MenuItem({
                 children: item.name,
                 onClick: (event) => onItemClick(item, event)
